@@ -1,0 +1,38 @@
+package antlr.parameters;
+
+import java.util.ArrayList;
+
+public class Test {
+    String testName;
+    String methodName;
+    ArrayList<Assert> assertions = new ArrayList<>();
+
+    public Test(String testName, String methodName) {
+        this.testName = testName;
+        this.methodName = methodName;
+    }
+
+    public String getTestName() {
+        return testName;
+    }
+
+    public void setTestName(String testName) {
+        this.testName = testName;
+    }
+
+    public String getMethodName() {
+        return methodName;
+    }
+
+    public void setMethodName(String methodName) {
+        this.methodName = methodName;
+    }
+
+    public void addAssert(Assert assertion) {
+        assertions.add(assertion);
+    }
+
+    public ArrayList<Assert> getAssertions() {
+        return assertions;
+    }
+}
