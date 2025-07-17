@@ -98,7 +98,7 @@ public class JavaParserProcessor {
     }
 
     private static void writeLineToFile(String line) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("C:\\Users\\User\\Documents\\GitHub\\UnitTest\\src\\main\\java\\input\\generate\\JavaGen.cfg", true))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("C:\\Users\\User\\Documents\\GitHub\\UnitTestGenerator\\UnitTest\\src\\main\\java\\input\\generate\\JavaGen.cfg", true))) {
             writer.write(line);
         } catch (IOException e) {
             e.printStackTrace();
@@ -106,7 +106,7 @@ public class JavaParserProcessor {
     }
 
     private void clearWriter() {
-        try (BufferedWriter clearWriter = new BufferedWriter(new FileWriter("C:\\Users\\User\\Documents\\GitHub\\UnitTest\\src\\main\\java\\input\\generate\\JavaGen.cfg", false))) {
+        try (BufferedWriter clearWriter = new BufferedWriter(new FileWriter("C:\\Users\\User\\Documents\\GitHub\\UnitTestGenerator\\UnitTest\\src\\main\\java\\input\\generate\\JavaGen.cfg", false))) {
             clearWriter.write("");
         } catch (IOException e) {
             e.printStackTrace();
