@@ -1,26 +1,12 @@
 package main;
 
-import antlr.*;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTree;
-
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
+@SpringBootApplication
 public class Main {
 
-    public static void main(String[] args) throws Exception {
-        JavaParserProcessor jpp = new JavaParserProcessor("Example.txt");
-        jpp.parser();
-
-        String input = new String(Files.readAllBytes(Paths.get("C:\\Users\\User\\Documents\\GitHub\\UnitTestGenerator\\UnitTest\\src\\main\\java\\input\\generate\\JavaGen.cfg")));
-        JUnitGenLexer lexer = new JUnitGenLexer(CharStreams.fromString(input));
-        JUnitGenParser parser = new JUnitGenParser(new CommonTokenStream(lexer));
-        ParseTree tree = parser.testFile();
-
-        MyJUnitTestVisitor visitor = new MyJUnitTestVisitor();
-        visitor.visit(tree);
+    public static void main(String[] args) {
+        SpringApplication.run(Main.class, args);
     }
 }

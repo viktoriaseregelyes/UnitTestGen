@@ -384,7 +384,7 @@ public class MyJUnitTestVisitor extends JUnitGenBaseVisitor<Void> {
     }
 
     private static void writeLine(String line) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("C:\\Users\\User\\Documents\\GitHub\\UnitTestGenerator\\UnitTest\\src\\main\\java\\input\\generate\\TestClass.java", true))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("C:\\Users\\User\\Documents\\GitHub\\UnitTestGenerator\\UnitTest\\TestClass.java", true))) {
             writer.write(line);
         } catch (IOException e) {
             e.printStackTrace();
@@ -394,7 +394,7 @@ public class MyJUnitTestVisitor extends JUnitGenBaseVisitor<Void> {
     }
 
     private void clearWriter() {
-        try (BufferedWriter clearWriter = new BufferedWriter(new FileWriter("C:\\Users\\User\\Documents\\GitHub\\UnitTestGenerator\\UnitTest\\src\\main\\java\\input\\generate\\TestClass.java", false))) {
+        try (BufferedWriter clearWriter = new BufferedWriter(new FileWriter("C:\\Users\\User\\Documents\\GitHub\\UnitTestGenerator\\UnitTest\\TestClass.java", false))) {
             clearWriter.write("");
         } catch (IOException e) {
             e.printStackTrace();
