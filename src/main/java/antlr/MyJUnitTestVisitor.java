@@ -1,17 +1,12 @@
 package antlr;
 
 import antlr.parameters.*;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.io.*;
+import java.nio.file.*;
+import java.util.*;
 
 public class MyJUnitTestVisitor extends JUnitGenBaseVisitor<Void> {
     String className;

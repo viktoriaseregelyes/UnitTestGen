@@ -1,12 +1,24 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { TestGeneratorService } from './services/test-generator.service';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  standalone: false,
+  styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'frontend';
+  title = 'UnitTestGenerator';
+  inputClass: string = "public class Example {}";
+  templateClass: string = "TEST TEMPLATE HERE";
+  generatedTests: string = "Done";
+
+  constructor(private generatorService: TestGeneratorService) {}
+
+  generate(): void {
+    this.generatorService.generateTests(this.inputClass).subscribe({
+      next: (res) => this.generatedTests = res.generatedTests,
+      error: (err) => this.generatedTests = 'Error sending input.'
+    });
+  }
 }
