@@ -1,3 +1,4 @@
+/** ez igen
 import {
   AngularNodeAppEngine,
   createNodeRequestHandler,
@@ -13,6 +14,7 @@ const browserDistFolder = resolve(serverDistFolder, '../browser');
 
 const app = express();
 const angularApp = new AngularNodeAppEngine();
+*/
 
 /**
  * Example Express Rest API endpoints can be defined here.
@@ -29,6 +31,7 @@ const angularApp = new AngularNodeAppEngine();
 /**
  * Serve static files from /browser
  */
+/** ez igen
 app.use(
   express.static(browserDistFolder, {
     maxAge: '1y',
@@ -36,10 +39,12 @@ app.use(
     redirect: false,
   }),
 );
+*/
 
 /**
  * Handle all other requests by rendering the Angular application.
  */
+/** ez igen
 app.use('/**', (req, res, next) => {
   angularApp
     .handle(req)
@@ -48,19 +53,24 @@ app.use('/**', (req, res, next) => {
     )
     .catch(next);
 });
+*/
 
 /**
  * Start the server if this module is the main entry point.
  * The server listens on the port defined by the `PORT` environment variable, or defaults to 4000.
  */
+/** ez igen
 if (isMainModule(import.meta.url)) {
   const port = process.env['PORT'] || 4000;
   app.listen(port, () => {
     console.log(`Node Express server listening on http://localhost:${port}`);
   });
 }
+*/
 
 /**
  * Request handler used by the Angular CLI (for dev-server and during build) or Firebase Cloud Functions.
  */
+/** ez igen
 export const reqHandler = createNodeRequestHandler(app);
+*/

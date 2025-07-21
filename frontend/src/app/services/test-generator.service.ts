@@ -13,6 +13,6 @@ export class TestGeneratorService {
 
   generateTests(inputClass: string): Observable<{ generatedTests: string }> {
     const headers = new HttpHeaders({ 'Content-Type': 'text/plain' });
-    return this.http.post<{ generatedTests: string }>(this.baseUrl, inputClass);
+    return this.http.post<{ generatedTests: string }>(this.baseUrl + '/generate-tests', inputClass, { headers });
   }
 }

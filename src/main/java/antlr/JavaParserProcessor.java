@@ -7,21 +7,19 @@ import com.github.javaparser.ast.comments.Comment;
 import com.github.javaparser.ast.stmt.*;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
 public class JavaParserProcessor {
-    String fileName;
+    String file;
 
     public JavaParserProcessor(String file) {
-        this.fileName = file;
+        this.file = file;
     }
 
     public void parser() throws Exception {
         clearWriter();
 
-        File file = new File("src/main/java/input/" + fileName);
         CompilationUnit cu = StaticJavaParser.parse(file);
 
         cu.getAllContainedComments().forEach(Comment::remove);

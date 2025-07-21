@@ -1500,6 +1500,20 @@ textarea:focus {
   background-color: #2a3647;
 }
 
+.monaco {
+  line-height: inherit;
+  padding: 10px;
+  line-height: 1.5;
+  outline: none;
+  height: 950px;
+  display: block;
+}
+
+button:hover {
+  border-color: #2e485c;
+  background-color: #2a3647;
+}
+
 a {
   color: #060708;
   text-decoration: none
@@ -1606,7 +1620,7 @@ h6,
 .h4,
 .h5,
 .h6 {
-  font-family: "Garamond";
+  font-family: "Consolas";
   font-weight: 400;
   line-height: 1.1;
   color: inherit
@@ -2044,7 +2058,7 @@ code,
 kbd,
 pre,
 samp {
-  font-family: "Garamond"
+  font-family: "Consolas"
 }
 
 code {
@@ -2133,7 +2147,7 @@ pre code {
   padding-left: 15px;
   padding-right: 15px;
   padding-top: 15px;
-  height: 85vh;
+  height: 80vh;
 }
 
 .row {
@@ -3414,7 +3428,8 @@ label {
   display: inline-block;
   max-width: 100%;
   margin-bottom: 5px;
-  font-weight: bold
+  font-weight: bold;
+  font-size: 20px
 }
 
 input[type="search"] {
@@ -7558,7 +7573,7 @@ button.close {
   position: absolute;
   z-index: 1070;
   display: block;
-  font-family: "Garamond";
+  font-family: "Consolas";
   font-style: normal;
   font-weight: normal;
   letter-spacing: normal;
@@ -7692,7 +7707,7 @@ button.close {
   display: none;
   max-width: 276px;
   padding: 1px;
-  font-family: "Garamond";
+  font-family: "Consolas";
   font-style: normal;
   font-weight: normal;
   letter-spacing: normal;
@@ -8002,7 +8017,7 @@ button.close {
   width: 20px;
   height: 20px;
   line-height: 1;
-  font-family: "Garamond"
+  font-family: "Consolas"
 }
 
 .carousel-control .icon-prev:before {
@@ -8780,5 +8795,5 @@ body {
 
 body {
   margin: 0;
-  font-family: "monospace";
+  font-family: "Consolas";
 }

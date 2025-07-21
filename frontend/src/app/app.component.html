@@ -1,4 +1,3 @@
-<body>
   <div class="container">
       <nav class="navbar navbar-default">
           <div class="navbar-header">
@@ -10,14 +9,13 @@
   <div class="container-fluid mt-4">
       <div class="col-lg-6">
         <label>Input Code:</label>
-        <textarea [(ngModel)]="inputClass"></textarea>
+        <ngx-monaco-editor class="monaco" [options]="editorOptions" [(ngModel)]="inputClass"></ngx-monaco-editor>
       </div>
 
       <div class="col-lg-6">
         <label>Test Template:</label>
-        <textarea [(ngModel)]="templateClass"></textarea>
+        <ngx-monaco-editor class="monaco" [options]="editorOptions" [(ngModel)]="templateClass"></ngx-monaco-editor>
       </div>
-
   </div>
 
   <div style="text-align: center; margin-top: 20px;">
@@ -28,6 +26,8 @@
     <h2>Generated Tests:</h2>
     <pre>{{ generatedTests }}</pre>
   </div>
-</body>
+
+
+
 
 
