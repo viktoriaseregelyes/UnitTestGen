@@ -7,30 +7,73 @@ import { TestGeneratorService } from './services/test-generator.service';
   standalone: false,
   styleUrl: './app.component.css'
 })
+
 export class AppComponent {
-  title = 'UnitTestGenerator';
-  inputClass: string = "public class Example {}";
-  templateClass: string = "TEST TEMPLATE HERE";
+  title = 'Unit Test Generator';
+  
+  inputClass: string = "public class ClassName {\n\tpublic int name(int a, int b) {\n\t\treturn a + b;\n\t}\n}";
+  templateClass: string = "Test output";
+  testCases: string = "TEST testName\nMETHOD name\nPARAM int a VALUE 10\nPARAM int b VALUE 0\nEXPECT 10;"
   generatedTests: string = "Done";
+
+  isLoading = false;
+  copySuccess = false;
+  sidebarCollapsed = false;
+  theme: 'vs-dark' | 'vs-light' = 'vs-dark';
 
   editorOptions = {
     theme: 'vs-dark',
-    language: 'java',
-    fontSize: 14,
+    language: 'javascript',
+    fontSize: 16,
     fontFamily: 'JetBrains Mono, monospace',
     automaticLayout: true
   };
-  code: string = 'function x() {\nconsole.log("Hello world!");\n}';
-  originalCode: string = 'function x() { // TODO }';
 
   constructor(private generatorService: TestGeneratorService) {}
 
+  toggleSidebar(): void {
+    this.sidebarCollapsed = !this.sidebarCollapsed;
+  }
+
+  toggleTheme(): void {
+    this.theme = this.theme === 'vs-dark' ? 'vs-light' : 'vs-dark';
+    this.editorOptions = {
+      ...this.editorOptions,
+      theme: this.theme
+    };
+  }
+
   generate(): void {
-    console.log('Button clicked');
+    this.isLoading = true;
 
     this.generatorService.generateTests(this.inputClass).subscribe({
-      next: (res) => this.generatedTests = res.generatedTests,
-      error: (err) => this.generatedTests = 'Error sending input.'
+      next: (res) => { this.templateClass = res; this.isLoading = false;},
+      error: (err) => { this.generatedTests = 'Error sending input.'; this.isLoading = false; }
     });
+  }
+
+  copyEditorContent(): void {
+    navigator.clipboard.writeText(this.templateClass).then(() => {
+      this.copySuccess = true;
+      setTimeout(() => this.copySuccess = false, 2000);
+      }).catch(err => {
+        console.error('Could not copy text: ', err);
+    });
+  }
+
+  downloadEditorContent(): void {
+    const blob = new Blob([this.templateClass], { type: 'text/plain' });
+    const url = window.URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'MyJavaFile.java';
+    a.click();
+
+    window.URL.revokeObjectURL(url);
+  }
+
+  get themeLabel(): string {
+    return this.theme === 'vs-dark' ? '🌙 Dark Mode' : '☀️ Light Mode';
   }
 }

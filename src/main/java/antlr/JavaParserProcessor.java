@@ -21,11 +21,9 @@ public class JavaParserProcessor {
         clearWriter();
 
         CompilationUnit cu = StaticJavaParser.parse(file);
-
         cu.getAllContainedComments().forEach(Comment::remove);
 
         cu.getPackageDeclaration().ifPresent(pkg -> writeLineToFile("PACKAGE " + pkg.getName() + "\n\n"));
-
         cu.getImports().forEach(importDecl -> writeLineToFile("IMPORT " + importDecl.getName() + "\n"));
 
         writeLineToFile("\n");

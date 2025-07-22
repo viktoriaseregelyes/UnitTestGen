@@ -1,30 +1,46 @@
   <div class="container">
       <nav class="navbar navbar-default">
-          <div class="navbar-header">
-              <a routerLink="/" class="navbar-brand">{{title}}</a>
-          </div>
+            <ul>
+              <li><div class="hamburger" (click)="toggleSidebar()">☰</div></li>
+              <li><a routerLink="/" class="navbar-brand">{{title}}</a></li>
+              <li style="float:right"><button class="theme-button" (click)="toggleTheme()"> {{ themeLabel }}</button></li>
+            </ul>
       </nav>
   </div>
 
   <div class="container-fluid mt-4">
-      <div class="col-lg-6">
-        <label>Input Code:</label>
+      <!-- <div class="col-lg-2">
+        <label>Test Cases:</label>
+        <ngx-monaco-editor class="monaco" [options]="editorOptions" [(ngModel)]="testCases"></ngx-monaco-editor>
+      </div> -->
+
+    <div *ngIf="!sidebarCollapsed" class="app-container">
+      <aside class="col-lg-2" [class.collapsed]="sidebarCollapsed">
+        <label>Test Cases</label>
+        <ngx-monaco-editor class="monaco" [options]="editorOptions" [(ngModel)]="testCases"></ngx-monaco-editor>
+      </aside>
+    </div>
+
+      <div [ngClass]="{ 'col-lg-5': !sidebarCollapsed, 'col-lg-6': sidebarCollapsed }">
+        <label>Input Class:</label>
         <ngx-monaco-editor class="monaco" [options]="editorOptions" [(ngModel)]="inputClass"></ngx-monaco-editor>
       </div>
 
-      <div class="col-lg-6">
-        <label>Test Template:</label>
+      <div [ngClass]="{ 'col-lg-5': !sidebarCollapsed, 'col-lg-6': sidebarCollapsed }">
+        <label>Test Class:</label>
         <ngx-monaco-editor class="monaco" [options]="editorOptions" [(ngModel)]="templateClass"></ngx-monaco-editor>
+        <button class="copy icon" (click)="copyEditorContent()">Copy</button>
+        <div *ngIf="copySuccess" class="copy-badge">Copied</div>
+        <button class="copy icon" style="right: 7.5em;" (click)="downloadEditorContent()">Download</button>
       </div>
   </div>
 
-  <div style="text-align: center; margin-top: 20px;">
-    <button (click)="generate()">Generate Tests</button>
+  <div class="loader-overlay" *ngIf="isLoading">
+    <div class="loader"></div>
   </div>
-
-  <div *ngIf="generatedTests" style="text-align: center; margin-top: 20px;">
-    <h2>Generated Tests:</h2>
-    <pre>{{ generatedTests }}</pre>
+  
+  <div style="text-align: center; margin-top: 30px;">
+    <button (click)="generate()">Generate Tests</button>
   </div>
 
 
