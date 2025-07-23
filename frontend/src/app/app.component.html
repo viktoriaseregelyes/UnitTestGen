@@ -1,7 +1,7 @@
   <div class="container">
       <nav class="navbar navbar-default">
             <ul>
-              <li><div class="hamburger" (click)="toggleSidebar()">☰</div></li>
+              <li><div class="sidebar" (click)="toggleSidebar()">☰</div></li>
               <li><a routerLink="/" class="navbar-brand">{{title}}</a></li>
               <li style="float:right"><button class="theme-button" (click)="toggleTheme()"> {{ themeLabel }}</button></li>
             </ul>
@@ -9,19 +9,17 @@
   </div>
 
   <div class="container-fluid mt-4">
-      <!-- <div class="col-lg-2">
-        <label>Test Cases:</label>
-        <ngx-monaco-editor class="monaco" [options]="editorOptions" [(ngModel)]="testCases"></ngx-monaco-editor>
-      </div> -->
-
     <div *ngIf="!sidebarCollapsed" class="app-container">
-      <aside class="col-lg-2" [class.collapsed]="sidebarCollapsed">
+      <aside class="col-lg-3" [class.collapsed]="sidebarCollapsed">
         <label>Test Cases</label>
+        <div class="tooltip-container">&#9432;
+          <span class="tooltip-text">TODO test cases description</span>
+        </div>
         <ngx-monaco-editor class="monaco" [options]="editorOptions" [(ngModel)]="testCases"></ngx-monaco-editor>
       </aside>
     </div>
 
-      <div [ngClass]="{ 'col-lg-5': !sidebarCollapsed, 'col-lg-6': sidebarCollapsed }">
+      <div [ngClass]="{ 'col-lg-4': !sidebarCollapsed, 'col-lg-6': sidebarCollapsed }">
         <label>Input Class:</label>
         <ngx-monaco-editor class="monaco" [options]="editorOptions" [(ngModel)]="inputClass"></ngx-monaco-editor>
       </div>

@@ -16,16 +16,21 @@ import java.nio.file.*;
 @RequestMapping("/api")
 @CrossOrigin(origins = "http://localhost:4200")
 public class GeneratorController {
-    String fileName;
+    String inputFileName;
+    String testCasesFileName;
 
-    @PostMapping(value = "/generate-tests", consumes = "text/plain")
-    public ResponseEntity<String> generateTests(@RequestBody String inputClass, @RequestBody String testCases) throws Exception {
+    @PostMapping(value = "/generate-tests", consumes = "application/json")
+    public ResponseEntity<String> generateTests(@RequestBody TestRequest request) throws Exception {
         clearWriter();
+        String inputClass = request.inputClass;
+        String testCases = request.testCases;
 
-        fileName = "src\\main\\java\\input\\uploads\\input_" + System.currentTimeMillis() + ".txt";
+        inputFileName = "src\\main\\java\\input\\uploads\\input_" + System.currentTimeMillis() + ".txt";
+        testCasesFileName = "src\\main\\java\\input\\uploads\\params_" + System.currentTimeMillis() + ".txt";
 
         try {
-            Files.write(Paths.get(fileName), inputClass.getBytes());
+            Files.write(Paths.get(inputFileName), inputClass.getBytes());
+            Files.write(Paths.get(testCasesFileName), testCases.getBytes());
         } catch (IOException e) {
             e.printStackTrace();
             return ResponseEntity.ofNullable("Failed to load input.");
@@ -46,7 +51,7 @@ public class GeneratorController {
         JUnitGenParser parser = new JUnitGenParser(new CommonTokenStream(lexer));
         ParseTree tree = parser.testFile();
 
-        MyJUnitTestVisitor visitor = new MyJUnitTestVisitor();
+        MyJUnitTestVisitor visitor = new MyJUnitTestVisitor(testCasesFileName);
         visitor.visit(tree);
     }
 

@@ -1,0 +1,38 @@
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import java.nio.file.Path;
+
+public class CloudStorageService {
+private final S3Client s3Client;
+private final S3Client2 s3Client2;
+private final String bucketName;
+private final String valami;
+
+    public CloudStorageService(S3Client s3Client, String bucketName) {
+        this.s3Client = s3Client;
+        this.bucketName = bucketName;
+    }
+
+    public CloudStorageService(S3Client s3Client, String bucketName) {
+                this.s3Client = s3Client;
+                this.bucketName = bucketName;
+                this.valami = valami;
+    }
+
+    public void uploadFile(String key, Path filePath) {
+        PutObjectRequest request = PutObjectRequest.builder()
+                .bucket(bucketName)
+                .key(key)
+                .build();
+        s3Client2.putObject(request, valami);
+    }
+
+    public void uploadFile2(String key, Path filePath) {
+        PutObjectRequest request = PutObjectRequest.builder()
+                .bucket(bucketName)
+                .key(key)
+                .build();
+        s3Client.save(valami, request);
+        s3Client2.putObject2(request, filePath);
+    }
+}

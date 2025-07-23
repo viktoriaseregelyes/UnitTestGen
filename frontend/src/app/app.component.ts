@@ -46,7 +46,7 @@ export class AppComponent {
   generate(): void {
     this.isLoading = true;
 
-    this.generatorService.generateTests(this.inputClass).subscribe({
+    this.generatorService.generateTests(this.inputClass, this.testCases).subscribe({
       next: (res) => { this.templateClass = res; this.isLoading = false;},
       error: (err) => { this.generatedTests = 'Error sending input.'; this.isLoading = false; }
     });

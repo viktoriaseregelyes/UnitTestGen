@@ -19,34 +19,47 @@ public class MyJUnitTestVisitor extends JUnitGenBaseVisitor<Void> {
     ArrayList<String> exprs = new ArrayList<>(); // mock expressions
     ArrayList<Param> methodParams = new ArrayList<>(); // a methods input params and local params
     HashMap<String, ArrayList<String>> mockMethodParams = new HashMap<>(); // mock methods parameters for verify()
-    HashMap<String, String> mockClasses = new HashMap<>(); // mock classes which has mock verion
+    HashMap<String, String> mockClasses = new HashMap<>(); // mock classes which has mock version
+    String testCasesFileName;
 
+    /**
+     * constructor for an input paramgen file
+     * @param testCasesFileName
+     */
+    public MyJUnitTestVisitor(String testCasesFileName) {
+        this.testCasesFileName = testCasesFileName;
+    }
+
+    /**
+     * import needed libs
+     * @param ctx the parse tree
+     * @return
+     */
     @Override
     public Void visitImportDeclaration(JUnitGenParser.ImportDeclarationContext ctx) {
         clearWriter();
-
-        String importName = ctx.importName.getText();
-        writeLine("import " + importName + ";\n");
+        writeLine("import " + ctx.importName.getText() + ";\n");
 
         return super.visitImportDeclaration(ctx);
     }
 
+    /**
+     * do basic setups
+     * do mock lib import if needed
+     * class template setup
+     * beforeeach setup
+     * @param ctx the parse tree
+     * @return
+     */
     @Override
     public Void visitClassDeclaration(JUnitGenParser.ClassDeclarationContext ctx) {
-        className = ctx.className.getText();
-        basicImports();
-        loadParamConfig();
-        lastMethod = setLastMethod(ctx);
-        mockClasses = paramVisitor.getMockClasses();
-        mockConstructorCreation(ctx);
-        inputConstructor = paramVisitor.getConstructor();
+        setUpActions(ctx);
 
-        mockFieldCreation(ctx);
         if(!mockTypes.isEmpty())
             mockImports();
 
         classSetup();
-        testSetup();
+        testSetupBeforeEach();
 
         return super.visitClassDeclaration(ctx);
     }
@@ -81,7 +94,7 @@ public class MyJUnitTestVisitor extends JUnitGenBaseVisitor<Void> {
                         for (String expr : exprs) {
                             if (expr.startsWith(mock.getParamName() + ".")) {
                                 if(verify)
-                                    writeLine("));\n");
+                                    writeLine(");\n");
 
                                 writeLine("\t\tverify(" + mock.getParamName() + ", times(1))." + expr.replace(mock.getParamName() + ".", ""));
                                 verifyMethodParams(mockMethodParams.get(expr));
@@ -92,6 +105,8 @@ public class MyJUnitTestVisitor extends JUnitGenBaseVisitor<Void> {
 
                     if (currentAssert.getExpection() != null && currentAssert.getExpectMessage() != null)
                         writeLine("));\n\t\tassertEquals(" + currentAssert.getExpectMessage() + ", exception.getMessage());\n\t}\n\n");
+                    else if(verify)
+                        writeLine(");\n\t}\n\n");
                     else
                         writeLine("));\n\t}\n\n");
 
@@ -231,11 +246,16 @@ public class MyJUnitTestVisitor extends JUnitGenBaseVisitor<Void> {
         }
     }
 
+    /**
+     * create class template
+     * create local parameters
+     */
     private void classSetup() {
         writeLine("class " + className + "Test {\n");
         if(!mockTypes.isEmpty()) {
             for(Param mockType : mockTypes) {
                 if(mockClasses.containsKey(mockType.getType())) {
+
                     writeLine("\t// Using custom mock for " + mockType.getType() + " class\n");
                     writeLine("\tprivate " + mockClasses.get(mockType.getType()) + " " + mockType.getParamName() + ";\n");
                 }
@@ -248,7 +268,10 @@ public class MyJUnitTestVisitor extends JUnitGenBaseVisitor<Void> {
         writeLine("\n");
     }
 
-    private void testSetup() {
+    /**
+     * declare beforeach function
+     */
+    private void testSetupBeforeEach() {
         writeLine("\t@BeforeEach\n");
         writeLine("\tvoid setUp() {\n");
         for(Param mockType : mockTypes) {
@@ -278,7 +301,7 @@ public class MyJUnitTestVisitor extends JUnitGenBaseVisitor<Void> {
 
     private void loadParamConfig() {
         try {
-            String input = Files.readString(Paths.get("C:\\Users\\User\\Documents\\GitHub\\UnitTestGenerator\\UnitTest\\src\\main\\java\\input\\generate\\ParamGen.cfg"));
+            String input = Files.readString(Paths.get(testCasesFileName));
             ParamGenLexer lexer = new ParamGenLexer(CharStreams.fromString(input));
             ParamGenParser parser = new ParamGenParser(new CommonTokenStream(lexer));
             ParseTree tree = parser.templateFile();
@@ -319,6 +342,11 @@ public class MyJUnitTestVisitor extends JUnitGenBaseVisitor<Void> {
         }
     }
 
+    /**
+     * lowercase input param's first letter
+     * @param input
+     * @return
+     */
     private String lowercaseFirstLetter(String input) {
         if (input == null || input.isEmpty()) {
             return input;
@@ -326,6 +354,9 @@ public class MyJUnitTestVisitor extends JUnitGenBaseVisitor<Void> {
         return input.substring(0, 1).toLowerCase() + input.substring(1);
     }
 
+    /**
+     * declare the best construstor
+     */
     private void useConstructor() {
         Constructor bestConstructor = null;
         int maxSetValues = -1;
@@ -363,13 +394,9 @@ public class MyJUnitTestVisitor extends JUnitGenBaseVisitor<Void> {
                     if (param.getValue() != null) {
                         writeLine(param.getValue().getFirst());
                     }
-                    else {
-                        writeLine(param.getParamName());
-                    }
+                    else { writeLine(param.getParamName()); }
                 }
-                else {
-                    writeLine(param.getParamName());
-                }
+                else { writeLine(param.getParamName()); }
 
                 if (i < bestConstructor.getParams().size() - 1) {
                     writeLine(", ");
@@ -378,6 +405,11 @@ public class MyJUnitTestVisitor extends JUnitGenBaseVisitor<Void> {
         }
     }
 
+    /**
+     * write all lines to the file where test classes goes
+     * it writes the lines in command line temporarly
+     * @param line
+     */
     private static void writeLine(String line) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("C:\\Users\\User\\Documents\\GitHub\\UnitTestGenerator\\UnitTest\\TestClass.java", true))) {
             writer.write(line);
@@ -388,11 +420,36 @@ public class MyJUnitTestVisitor extends JUnitGenBaseVisitor<Void> {
         System.out.print(line);
     }
 
+    /**
+     * clear file where the test file goes
+     */
     private void clearWriter() {
         try (BufferedWriter clearWriter = new BufferedWriter(new FileWriter("C:\\Users\\User\\Documents\\GitHub\\UnitTestGenerator\\UnitTest\\TestClass.java", false))) {
             clearWriter.write("");
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * get className
+     * do import
+     * get the infos from paramgen (mock classes, constructor, test cases...)
+     * get last method for the last curve
+     * get mock classes from paramgen which has mock version
+     * create mock constructor
+     * create constructor
+     * get fields which should be mocked
+     * @param ctx
+     */
+    private void setUpActions(JUnitGenParser.ClassDeclarationContext ctx) {
+        className = ctx.className.getText();
+        basicImports();
+        loadParamConfig();
+        lastMethod = setLastMethod(ctx);
+        mockClasses = paramVisitor.getMockClasses();
+        mockConstructorCreation(ctx);
+        inputConstructor = paramVisitor.getConstructor();
+        mockFieldCreation(ctx);
     }
 }

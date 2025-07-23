@@ -1,0 +1,29 @@
+TEST testAdd
+METHOD add
+PARAM int a VALUE 10
+PARAM int b VALUE 0
+EXPECT 20
+
+TEST testSubtract
+METHOD subtract
+PARAM int a VALUE 11
+PARAM int b VALUE 1
+EXPECT 21
+
+TEST testMultiply
+METHOD multiply
+PARAM int a VALUE 12
+PARAM int b VALUE 2
+EXPECT 22
+
+TEST testDivide
+METHOD divide
+PARAM int a VALUE 13
+PARAM int b VALUE 3
+EXPECT 23
+
+TEST testDivideWrong
+METHOD divide
+PARAM int a VALUE 14
+PARAM int b VALUE 0
+EXPECT_EXCEPTION IllegalArgumentException("Division by zero is not allowed")

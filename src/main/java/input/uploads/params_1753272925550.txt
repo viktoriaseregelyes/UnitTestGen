@@ -1,0 +1,14 @@
+CONSTRUCTOR
+PARAM String bucketName VALUE "hello"
+
+MOCKING
+MOCK S3Client S3ClientMock
+
+TEST testUploadFile
+METHOD uploadFile
+PARAM String key VALUE "hello"
+
+TEST testUploadFile2
+METHOD uploadFile2
+PARAM String key VALUE "hello"
+EXPECT 20

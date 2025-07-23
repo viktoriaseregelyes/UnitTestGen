@@ -11,8 +11,9 @@ export class TestGeneratorService {
 
   constructor(private http: HttpClient) {}
 
-  generateTests(inputClass: string): Observable<string> {
-    const headers = new HttpHeaders({ 'Content-Type': 'text/plain' });
-    return this.http.post(this.baseUrl + '/generate-tests', inputClass, { headers, responseType: 'text' });
+  generateTests(inputClass: string, testCases: string): Observable<string> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const body = { inputClass, testCases };
+    return this.http.post(this.baseUrl + '/generate-tests', body, { headers, responseType: 'text' });
   }
 }
