@@ -13,7 +13,29 @@
       <aside class="col-lg-3" [class.collapsed]="sidebarCollapsed">
         <label>Test Cases</label>
         <div class="tooltip-container">&#9432;
-          <span class="tooltip-text">TODO test cases description</span>
+          <span class="tooltip-text">
+            <p>With this grammar, you can easily specify how tests should be generated for a given class or method.</p>
+              <ul>
+                  <li><strong>CONSTRUCTOR</strong> – optional section, specifies the parameters of the constructor. Example: <code>CONSTRUCTOR PARAM int id VALUE 1</code></li>
+                  <li><strong>MOCKING</strong> – optional section, definition of mock objects. Example: <code>MOCK Service serviceMock</code></li>
+                  <li><strong>TEST</strong> – start of a new test case.
+                    <ul>
+                      <li><strong>METHOD</strong> – name of the method to be tested.</li>
+                      <li><strong>PARAM</strong> – method parameters and their values:
+                        <ul>
+                          <li><code>VALUE x</code> – a single value</li>
+                          <li><code>VALUES [x, y, z]</code> – multiple values</li>
+                        </ul>
+                      </li>
+                      <li><strong>EXPECT</strong> – expected output (<code>not</code> prefix for negation)</li>
+                      <li><strong>EXPECT_EXCEPTION</strong> – expected exception, with optional message</li>
+                  </ul>
+                </li>
+              </ul>
+              <p><strong>Supported types example: </strong> <code>int</code>, <code>float</code>, <code>double</code>, <code>char</code>, <code>boolean</code>, <code>string</code>, <code>enum</code>, <code>List&lt;...&gt;</code>, <code>Optional&lt;...&gt;</code>, <code>Map&lt;...&gt;</code>, <code>Set&lt;...&gt;</code>, <code>custom type</code>.</p>
+              <p><strong>Example:</strong></p>
+              <ngx-monaco-editor class="monaco" [options]="editorOptions" [(ngModel)]="infoButton"></ngx-monaco-editor>
+          </span>
         </div>
         <ngx-monaco-editor class="monaco" [options]="editorOptions" [(ngModel)]="testCases"></ngx-monaco-editor>
       </aside>
@@ -37,7 +59,7 @@
     <div class="loader"></div>
   </div>
   
-  <div style="text-align: center; margin-top: 30px;">
+  <div style="text-align: center; margin-top: 10px;">
     <button (click)="generate()">Generate Tests</button>
   </div>
 

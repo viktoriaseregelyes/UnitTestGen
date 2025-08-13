@@ -1,0 +1,5 @@
+TEST testName
+METHOD name
+PARAM int a VALUE 10
+PARAM int b VALUE 0
+EXPECT 10;

@@ -276,15 +276,15 @@ public class MyJUnitTestVisitor extends JUnitGenBaseVisitor<Void> {
         writeLine("\tvoid setUp() {\n");
         for(Param mockType : mockTypes) {
             if(mockClasses.containsKey(mockType.getType())) {
-                writeLine("\t\t" + mockType.getParamName() + " = new " + mockClasses.get(mockType.getType()) + "();\n");
+                writeLine("\t\tthis." + mockType.getParamName() + " = new " + mockClasses.get(mockType.getType()) + "();\n");
             }
             else {
-                writeLine("\t\t" + mockType.getParamName() + " = mock(" + mockType.getType() + ".class);\n");
+                writeLine("\t\tthis." + mockType.getParamName() + " = mock(" + mockType.getType() + ".class);\n");
             }
 
         }
 
-        writeLine("\t\t" + lowercaseFirstLetter(className) + " = new " + className + "(");
+        writeLine("\t\tthis." + lowercaseFirstLetter(className) + " = new " + className + "(");
         if(!constructor.isEmpty() && inputConstructor != null) {
             for(Constructor currentConstructor : constructor) {
                 for(Param param : currentConstructor.getParams()) {

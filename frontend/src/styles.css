@@ -1505,7 +1505,7 @@ textarea:focus {
   padding: 10px;
   line-height: 1.5;
   outline: none;
-  height: 1100px;
+  height: 75vh;
   display: block;
 }
 
@@ -1513,26 +1513,81 @@ textarea:focus {
   position: relative;
   display: inline-block;
   cursor: pointer;
-  font-size: 18px;
+  font-size: 16px;
   margin-left: 10px;
 }
 
 .tooltip-text {
-  visibility: hidden;
+  visibility: collapse;
   background-color: #43556d;
-  color: #fff;
-  text-align: center;
-  padding: 6px 10px;
-  border-radius: 4px;
+  color: #ffffff;
+  text-align: left;
+  padding: 6px 6px;
+  border-radius: 12px;
   position: absolute;
-  top: 125%;
-  left: 300%;
-  transform: translateX(-50%);
-  z-index: 1;
-  white-space: nowrap;
-
+  width: 600px;
+  top: 110%;
+  left: 450%;
+  transform: translateX(-11%) translateY(-1%);
+  z-index: 9999;
   opacity: 0;
   transition: opacity 0.3s;
+  white-space: pre-wrap;
+}
+
+.tooltip-text .monaco {
+  line-height: inherit;
+  padding: 10px;
+  line-height: 1.5;
+  outline: none;
+  height: 22vh;
+  display: block;
+}
+
+.tooltip-text > ul {
+  margin: 0.4em 0;
+  padding-left: 1.5em;
+  list-style-type: disc;
+}
+
+.tooltip-text > ul ul {
+  list-style-type: circle;
+  margin-top: 0.3em;
+  padding-left: 1.5em;
+}
+
+.tooltip-text > ul ul ul {
+  list-style-type: square;
+  margin-top: 0.3em;
+  padding-left: 1.5em;
+}
+
+.tooltip-text > li {
+  margin-bottom: 0.6em;
+  display: list-item;
+}
+
+.tooltip-text code {
+  background: #1e2a38;
+  color: #ffffff;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-family: "Courier New", monospace;
+}
+
+.tooltip-text p {
+  margin: 0.4em 0;
+}
+
+.tooltip-text pre {
+  background: #1e2a38;
+  color: #ffffff;
+  border-radius: 12px;
+  padding-left: 80px;
+  padding-top: 20px;
+  font-family: "Courier New", monospace;
+  font-size: 1.5rem;
+  margin-top: 0.3em;
 }
 
 .tooltip-container:hover .tooltip-text {
@@ -2242,16 +2297,11 @@ kbd kbd {
 
 pre {
   display: block;
-  padding: 10px;
-  margin: 0 0 10.5px;
   font-size: 14px;
   line-height: 1.42857143;
   word-break: break-all;
   word-wrap: break-word;
   color: #7b8a8b;
-  background-color: #ecf0f1;
-  border: 1px solid #cccccc;
-  border-radius: 4px
 }
 
 pre code {
