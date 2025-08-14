@@ -1,4 +1,4 @@
-// Generated from C:/Users/User/Documents/GitHub/UnitTest/src/main/java/antlr/JUnitGen.g4 by ANTLR 4.13.2
+// Generated from C:/Users/User/Documents/GitHub/UnitTestGenerator/UnitTest/src/main/java/antlr/JUnitGen.g4 by ANTLR 4.13.2
 package antlr;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -113,6 +113,18 @@ public class JUnitGenBaseListener implements JUnitGenListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterStatement(JUnitGenParser.StatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitStatement(JUnitGenParser.StatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterReturnDeclaration(JUnitGenParser.ReturnDeclarationContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -185,6 +197,18 @@ public class JUnitGenBaseListener implements JUnitGenListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterElseStmt(JUnitGenParser.ElseStmtContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitElseStmt(JUnitGenParser.ElseStmtContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterForLoop(JUnitGenParser.ForLoopContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -192,6 +216,18 @@ public class JUnitGenBaseListener implements JUnitGenListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitForLoop(JUnitGenParser.ForLoopContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterForEachLoop(JUnitGenParser.ForEachLoopContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitForEachLoop(JUnitGenParser.ForEachLoopContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -240,6 +276,18 @@ public class JUnitGenBaseListener implements JUnitGenListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitException(JUnitGenParser.ExceptionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterExprStatement(JUnitGenParser.ExprStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitExprStatement(JUnitGenParser.ExprStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

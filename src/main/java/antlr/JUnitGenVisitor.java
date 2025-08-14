@@ -1,4 +1,4 @@
-// Generated from C:/Users/User/Documents/GitHub/UnitTest/src/main/java/antlr/JUnitGen.g4 by ANTLR 4.13.2
+// Generated from C:/Users/User/Documents/GitHub/UnitTestGenerator/UnitTest/src/main/java/antlr/JUnitGen.g4 by ANTLR 4.13.2
 package antlr;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
@@ -59,6 +59,12 @@ public interface JUnitGenVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitMethodDeclaration(JUnitGenParser.MethodDeclarationContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link JUnitGenParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStatement(JUnitGenParser.StatementContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link JUnitGenParser#returnDeclaration}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -95,11 +101,23 @@ public interface JUnitGenVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitIfStmt(JUnitGenParser.IfStmtContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link JUnitGenParser#elseStmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitElseStmt(JUnitGenParser.ElseStmtContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link JUnitGenParser#forLoop}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitForLoop(JUnitGenParser.ForLoopContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link JUnitGenParser#forEachLoop}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitForEachLoop(JUnitGenParser.ForEachLoopContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link JUnitGenParser#tryBlock}.
 	 * @param ctx the parse tree
@@ -124,6 +142,12 @@ public interface JUnitGenVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitException(JUnitGenParser.ExceptionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link JUnitGenParser#exprStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExprStatement(JUnitGenParser.ExprStatementContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link JUnitGenParser#expr}.
 	 * @param ctx the parse tree

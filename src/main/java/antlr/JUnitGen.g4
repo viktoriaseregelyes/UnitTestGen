@@ -6,8 +6,7 @@ packageDeclaration: 'PACKAGE' packageName=ID;
 
 importDeclaration: 'IMPORT' importName=ID;
 
-classDeclaration:
-    'CLASS' className=ID classBodyElement*;
+classDeclaration: 'CLASS' className=ID classBodyElement*;
 
 classBodyElement:
       field
@@ -25,7 +24,14 @@ methodDeclaration:
     'METHOD' methodName=ID
     returnDeclaration
     paramDeclaration*
-    (controlFlow | expr | returnStmt | exceptionStmt)*
+    statement*
+    ;
+
+statement:
+      controlFlow
+    | returnStmt
+    | exceptionStmt
+    | exprStatement
     ;
 
 returnDeclaration: 'RETURN_TYPE' returnType=type;
@@ -35,23 +41,30 @@ paramDeclaration: 'PARAM' paramType=type paramName=ID;
 returnStmt: 'RETURN' returnValue=expr;
 exceptionStmt: 'EXCEPTION' exception;
 
-controlFlow: ifStmt | forLoop | tryBlock;
-ifStmt: 'IF_CONDITION' expr exceptionStmt*;
+controlFlow: ifStmt | forLoop | elseStmt | forEachLoop | tryBlock;
+ifStmt: 'IF_CONDITION' expr;
+elseStmt: 'ELSE_BLOCK_FOUND';
 forLoop: 'FOR_LOOP' expr+;
+forEachLoop: 'FOR_EACH_LOOP' iterateType=param variable=expr iterate=expr;
 tryBlock: 'TRY_BLOCK_FOUND' expr* catchBlock? finallyBlock?;
 catchBlock: 'CATCH_BLOCK' ID expr*;
 finallyBlock: 'FINALLY_BLOCK_FOUND' expr*;
 
 exception: 'throw new' ID LPAREN (param (',' param)*)? RPAREN SEMICOLON;
 
-expr: expr (comparison | operator) (expr | basicType)
+exprStatement: 'EXPRESSION' expr SEMICOLON;
+
+expr
+    : basicType
+    | ID
+    | '(' expr ')'
+    | expr (comparison | operator) (expr | basicType)
+    | NOT expr
     | varDecl
     | type expr?
     | expr methodDecl
     | '.' expr
-    | 'EXPRESSION' expr SEMICOLON
-    | NOT expr
-    | basicType;
+    ;
 
 varDecl: type ID WILLBE expr;
 
@@ -75,7 +88,8 @@ type: 'int'
      | 'Optional<' type '>'
      | 'Map<' type '>'
      | 'Set<' type '>'
-     | ID ((LT ((type (',' type)*) | '?')? GT) | LANGLE RANGLE)?;
+     | ID ((LT ((type (',' type)*) | '?')? GT) | LANGLE RANGLE)?
+     | type LANGLE expr* RANGLE;
 
 comparison: LT | GT | LTE | GTE | EQ | NEQ | AND | OR;
 operator: ADD | SUB | MUL | DIV | WILLBE;

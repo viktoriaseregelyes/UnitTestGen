@@ -51,6 +51,9 @@ public class GeneratorController {
         JUnitGenParser parser = new JUnitGenParser(new CommonTokenStream(lexer));
         ParseTree tree = parser.testFile();
 
+        //TestDataCollectorVisitor testDataCollectorVisitor = new TestDataCollectorVisitor();
+        //testDataCollectorVisitor.visit(tree);
+
         MyJUnitTestVisitor visitor = new MyJUnitTestVisitor(testCasesFileName);
         visitor.visit(tree);
     }

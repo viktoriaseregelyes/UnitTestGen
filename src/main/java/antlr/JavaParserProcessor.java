@@ -74,6 +74,15 @@ public class JavaParserProcessor {
                     });
                 }
                 case ForStmt forStmt -> writeLineToFile("FOR_LOOP " + stmt + "\n");
+                case ForEachStmt forEachStmt -> {
+                    writeLineToFile("FOR_EACH_LOOP " + forEachStmt.getVariable() + " " +
+                            forEachStmt.getIterable() + "\n");
+                    if (forEachStmt.getBody().isBlockStmt()) {
+                        processStatements(forEachStmt.getBody().asBlockStmt().getStatements());
+                    } else {
+                        processStatements(new NodeList<>(forEachStmt.getBody()));
+                    }
+                }
                 case WhileStmt whileStmt -> writeLineToFile("WHILE_LOOP " + stmt + "\n");
                 case TryStmt tryStmt -> {
                     writeLineToFile("TRY_BLOCK_FOUND\n");

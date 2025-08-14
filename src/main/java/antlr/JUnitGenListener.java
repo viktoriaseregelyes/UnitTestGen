@@ -1,4 +1,4 @@
-// Generated from C:/Users/User/Documents/GitHub/UnitTest/src/main/java/antlr/JUnitGen.g4 by ANTLR 4.13.2
+// Generated from C:/Users/User/Documents/GitHub/UnitTestGenerator/UnitTest/src/main/java/antlr/JUnitGen.g4 by ANTLR 4.13.2
 package antlr;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -88,6 +88,16 @@ public interface JUnitGenListener extends ParseTreeListener {
 	 */
 	void exitMethodDeclaration(JUnitGenParser.MethodDeclarationContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link JUnitGenParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterStatement(JUnitGenParser.StatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link JUnitGenParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitStatement(JUnitGenParser.StatementContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link JUnitGenParser#returnDeclaration}.
 	 * @param ctx the parse tree
 	 */
@@ -148,6 +158,16 @@ public interface JUnitGenListener extends ParseTreeListener {
 	 */
 	void exitIfStmt(JUnitGenParser.IfStmtContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link JUnitGenParser#elseStmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterElseStmt(JUnitGenParser.ElseStmtContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link JUnitGenParser#elseStmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitElseStmt(JUnitGenParser.ElseStmtContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link JUnitGenParser#forLoop}.
 	 * @param ctx the parse tree
 	 */
@@ -157,6 +177,16 @@ public interface JUnitGenListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitForLoop(JUnitGenParser.ForLoopContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link JUnitGenParser#forEachLoop}.
+	 * @param ctx the parse tree
+	 */
+	void enterForEachLoop(JUnitGenParser.ForEachLoopContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link JUnitGenParser#forEachLoop}.
+	 * @param ctx the parse tree
+	 */
+	void exitForEachLoop(JUnitGenParser.ForEachLoopContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link JUnitGenParser#tryBlock}.
 	 * @param ctx the parse tree
@@ -197,6 +227,16 @@ public interface JUnitGenListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitException(JUnitGenParser.ExceptionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link JUnitGenParser#exprStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterExprStatement(JUnitGenParser.ExprStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link JUnitGenParser#exprStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitExprStatement(JUnitGenParser.ExprStatementContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link JUnitGenParser#expr}.
 	 * @param ctx the parse tree
