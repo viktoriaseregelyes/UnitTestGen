@@ -16,23 +16,13 @@ class APKExpansionSupportTest {
 	}
 
 	@Test
-	void testName() {
-		assertEquals(10, aPKExpansionSupport.getAPKExpansionFiles(10, 0));
+	void testUploadFile() {
+		assertEquals(10, aPKExpansionSupport.getAPKExpansionFiles("hello"));
 	}
 
 	@Test
-	void testName() {
-		assertEquals(10, aPKExpansionSupport.getResourceZipFile(10, 0));
-	}
-
-	@Test
-	void testName() {
-		assertEquals(10, aPKExpansionSupport.getAPKExpansionZipFile(10, 0));
-	}
-
-	@Test
-	void testName() {
-		assertEquals(10, aPKExpansionSupport.getAPKExpansionZipFile(10, 0));
+	void testUploadFile2() {
+		assertEquals(10, aPKExpansionSupport.getResourceZipFile("hello"));
 	}
 
 }
