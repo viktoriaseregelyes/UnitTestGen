@@ -55,6 +55,14 @@
       </div>
   </div>
 
+  <div class="error-modal" *ngIf="showError">
+    <div class="error-box">
+      <h3>Error occurred</h3>
+      <p>{{ errorMessage }}</p>
+      <button (click)="closeError()">Ok</button>
+    </div>
+  </div>
+
   <div class="loader-overlay" *ngIf="isLoading">
     <div class="loader"></div>
   </div>

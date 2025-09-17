@@ -13,7 +13,7 @@ export class AppComponent {
   
   inputClass: string = "public class ClassName {\n\tpublic int name(int a, int b) {\n\t\treturn a + b;\n\t}\n}";
   templateClass: string = "Test output";
-  testCases: string = "TEST testName\nMETHOD name\nPARAM int a VALUE 10\nPARAM int b VALUE 0\nEXPECT 10;"
+  testCases: string = "TEST testName\nMETHOD name\nPARAM int a VALUE 10\nPARAM int b VALUE 0\nEXPECT 10"
   generatedTests: string = "Done";
   infoButton: string = 'CONSTRUCTOR\nPARAM int id VALUE 1\n\nMOCKING\nMOCK Service serviceMock\n\nTEST loginTest\nMETHOD login\nPARAM string username VALUE "admin"\nPARAM string password VALUE "1234"\nEXPECT true';
 
@@ -21,6 +21,9 @@ export class AppComponent {
   copySuccess = false;
   sidebarCollapsed = false;
   theme: 'vs-dark' | 'vs-light' = 'vs-dark';
+
+  showError = false;
+  errorMessage = '';
 
   editorOptions = {
     theme: 'vs-dark',
@@ -49,7 +52,7 @@ export class AppComponent {
 
     this.generatorService.generateTests(this.inputClass, this.testCases).subscribe({
       next: (res) => { this.templateClass = res; this.isLoading = false;},
-      error: (err) => { this.generatedTests = 'Error sending input.'; this.isLoading = false; }
+      error: (err) => { this.showError = true; this.errorMessage = err?.error || 'Error sending input.'; this.isLoading = false; }
     });
   }
 
@@ -76,5 +79,10 @@ export class AppComponent {
 
   get themeLabel(): string {
     return this.theme === 'vs-dark' ? '🌙 Dark Mode' : '☀️ Light Mode';
+  }
+
+  closeError(): void {
+    this.showError = false;
+    this.errorMessage = '';
   }
 }

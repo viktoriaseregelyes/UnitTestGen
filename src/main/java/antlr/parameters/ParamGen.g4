@@ -40,7 +40,8 @@ type: 'int'
     | 'Optional<' type '>'
     | 'Map<' type '>'
     | 'Set<' type '>'
-    | ID;
+    | ID
+    | type LANGLE RANGLE;
 
 literal: INT
     | FLOAT
@@ -50,6 +51,8 @@ literal: INT
     | NOTNULL
     | NULL;
 
+LANGLE: '[';
+RANGLE: ']';
 BOOLEAN: 'true' | 'false';
 NOTNULL: 'notnull';
 NULL: 'null';

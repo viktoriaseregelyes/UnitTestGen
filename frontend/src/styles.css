@@ -1595,6 +1595,50 @@ textarea:focus {
   opacity: 1;
 }
 
+.blur-background {
+  filter: blur(4px);
+  pointer-events: none;
+}
+
+.error-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.error-box {
+  background: #ffe6e6;
+  border: 2px solid #ff4d4d;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  max-width: 400px;
+  color: #b30000;
+  font-weight: bold;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.error-box button {
+  margin-top: 15px;
+  padding: 8px 16px;
+  background: #ff4d4d;
+  border: none;
+  color: white;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.error-box button:hover {
+  background: #e60000;
+}
+
 ul {
   list-style-type: none;
   margin: 0;

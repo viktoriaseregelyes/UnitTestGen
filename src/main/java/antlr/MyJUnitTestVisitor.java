@@ -43,7 +43,7 @@ public class MyJUnitTestVisitor extends JUnitGenBaseVisitor<Void> {
         basicImports();
         inputManager.loadParamAndInput();
 
-        if(!dataCollectorVisitor.getMockTypes().isEmpty())
+        if(!dataCollectorVisitor.getMockTypes().isEmpty() || !dataCollectorVisitor.getMockFunctionParam().isEmpty())
             mockImports();
 
         classSetup();
@@ -69,16 +69,37 @@ public class MyJUnitTestVisitor extends JUnitGenBaseVisitor<Void> {
                 "\tvoid " + currentTest.getTestName() + "() {\n");
 
         for (Assert currentAssert : currentTest.getAssertions()) {
+            for (Param currentParam : currentAssert.getParams()) {
+                if ((currentAssert.getExpection() != null || currentAssert.getExpect() != null) && currentParam.getValue().size() > 1) {
+                    writer.writeLine("\t\t" + currentParam.getType() + " " + currentParam.getParamName() + " = " + currentParam.getValue() + ";\n");
+                }
+            }
+        }
+
+        for (Assert currentAssert : currentTest.getAssertions()) {
             if (currentAssert.getExpect() != null) writeBasicAssertion(currentTest, currentAssert);
             else if (currentAssert.getExpection() != null) writeExceptionAssertion(currentTest, currentAssert);
 
-            for (Param currentParam : currentAssert.getParams()) {
-                if(currentAssert.getExpection() != null || currentAssert.getExpect() != null) {
-                    writer.writeLine(currentParam.getValue().getFirst());
-                    if (currentAssert.getParams().size() > 1 && !currentAssert.getParams().getLast().equals(currentParam))
-                        writer.writeLine(", ");
+            for(int i = 0; i < ctx.paramDeclaration().size(); i++) {
+                boolean found = false;
+
+                for (Param currentParam : currentAssert.getParams()) {
+                    if((currentAssert.getExpection() != null || currentAssert.getExpect() != null) && ctx.paramDeclaration(i).paramName.getText().equals(currentParam.getParamName())) {
+                        found = true;
+
+                        if(currentParam.getValue().size() > 1)
+                            writer.writeLine(currentParam.getParamName());
+                        else
+                            writer.writeLine(currentParam.getValue().getFirst());
+                    }
                 }
+
+                if (!found)
+                    writer.writeLine(ctx.paramDeclaration(i).paramName.getText());
+                if (i != ctx.paramDeclaration().size() - 1)
+                    writer.writeLine(", ");
             }
+
 
             dataCollectorVisitor.visitExpressionsIn(ctx);
 
@@ -161,8 +182,12 @@ public class MyJUnitTestVisitor extends JUnitGenBaseVisitor<Void> {
                 else writer.writeLine("\tprivate " + mockType.getType() + " " + mockType.getParamName() + ";\n");
             }
         }
-        writer.writeLine("\tprivate " + dataCollectorVisitor.getClassName() + " " + writer.lowercaseFirstLetter(dataCollectorVisitor.getClassName()) + ";\n");
-        writer.writeLine("\n");
+        if(!dataCollectorVisitor.getMockFunctionParam().isEmpty()) {
+            for(Param mockFunctionParam : dataCollectorVisitor.getMockFunctionParam()) {
+                writer.writeLine("\tprivate " + mockFunctionParam.getType() + " " + mockFunctionParam.getParamName() + ";\n");
+            }
+        }
+        writer.writeLine("\tprivate " + dataCollectorVisitor.getClassName() + " " + writer.lowercaseFirstLetter(dataCollectorVisitor.getClassName()) + ";\n\n");
     }
 
     /**
@@ -175,6 +200,12 @@ public class MyJUnitTestVisitor extends JUnitGenBaseVisitor<Void> {
             if(inputManager.getInputMockClasses().containsKey(mockType.getType()))
                 writer.writeLine("\t\tthis." + mockType.getParamName() + " = new " + inputManager.getInputMockClasses().get(mockType.getType()) + "();\n");
             else writer.writeLine("\t\tthis." + mockType.getParamName() + " = mock(" + mockType.getType() + ".class);\n");
+        }
+
+        for(Param mockFunctionParam : dataCollectorVisitor.getMockFunctionParam()) {
+            if(inputManager.getInputMockClasses().containsKey(mockFunctionParam.getType()))
+                writer.writeLine("\t\tthis." + mockFunctionParam.getParamName() + " = new " + inputManager.getInputMockClasses().get(mockFunctionParam.getType()) + "();\n");
+            else writer.writeLine("\t\tthis." + mockFunctionParam.getParamName() + " = mock(" + mockFunctionParam.getType() + ".class);\n");
         }
 
         writer.writeLine("\t\tthis." + writer.lowercaseFirstLetter(dataCollectorVisitor.getClassName()) + " = new " + dataCollectorVisitor.getClassName() + "(");

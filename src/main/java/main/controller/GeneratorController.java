@@ -31,15 +31,19 @@ public class GeneratorController {
         try {
             Files.write(Paths.get(inputFileName), inputClass.getBytes());
             Files.write(Paths.get(testCasesFileName), testCases.getBytes());
+
+            generate(inputClass);
+            String output = new String(Files.readAllBytes(Paths.get("TestClass.java")));
+
+            return ResponseEntity.ok(output);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (IOException e) {
             e.printStackTrace();
             return ResponseEntity.ofNullable("Failed to load input.");
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Ismeretlen hiba: " + e.getMessage());
         }
-
-        generate(inputClass);
-        String output = new String(Files.readAllBytes(Paths.get("TestClass.java")));
-
-        return ResponseEntity.ok(output);
     }
 
     public void generate(String inputClass) throws Exception {
@@ -50,9 +54,6 @@ public class GeneratorController {
         JUnitGenLexer lexer = new JUnitGenLexer(CharStreams.fromString(input));
         JUnitGenParser parser = new JUnitGenParser(new CommonTokenStream(lexer));
         ParseTree tree = parser.testFile();
-
-        //TestDataCollectorVisitor testDataCollectorVisitor = new TestDataCollectorVisitor();
-        //testDataCollectorVisitor.visit(tree);
 
         MyJUnitTestVisitor visitor = new MyJUnitTestVisitor(testCasesFileName);
         visitor.visit(tree);

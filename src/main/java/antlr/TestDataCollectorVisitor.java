@@ -8,6 +8,7 @@ public class TestDataCollectorVisitor extends JUnitGenBaseVisitor<Void> {
 
     private final List<Constructor> mockConstructors = new ArrayList<>();
     private final List<Param> mockTypes = new ArrayList<>();
+    private final List<Param> mockFunctionParam = new ArrayList<>();
     private final List<String> expressions = new ArrayList<>();
     private final List<Param> methodParams = new ArrayList<>(); // a methods input params and local params
     private final List<String> ifStatements = new ArrayList<>();
@@ -20,8 +21,9 @@ public class TestDataCollectorVisitor extends JUnitGenBaseVisitor<Void> {
     public Void visitClassDeclaration(JUnitGenParser.ClassDeclarationContext ctx) {
         className = ctx.className.getText();
         lastMethod = setLastMethod(ctx);
-        mockConstructorCreation(ctx);
-        mockFieldCreation(ctx);
+
+        mockTypeCreation(ctx);
+
         return super.visitClassDeclaration(ctx);
     }
 
@@ -107,43 +109,46 @@ public class TestDataCollectorVisitor extends JUnitGenBaseVisitor<Void> {
     }
 
     /**
+     * go through fields to get mocks
+     * go through method parameters to get mocks
      * go through the input constructors parameters and save mock parameters
      * create constructors as well
      * @param ctx
      */
-    private void mockConstructorCreation(JUnitGenParser.ClassDeclarationContext ctx) {
+    private void mockTypeCreation(JUnitGenParser.ClassDeclarationContext ctx) {
         for (JUnitGenParser.ClassBodyElementContext classElement : ctx.classBodyElement()) {
+            if (classElement.field() != null && classElement.field().fieldType.ID() != null) {
+                Param currentParam = new Param(classElement.field().fieldType.ID().getText(),
+                        classElement.field().fieldName.getText());
+
+                if (!containsParam(mockTypes, currentParam))
+                    mockTypes.add(currentParam);
+            }
+
+            if (classElement.methodDeclaration() != null) {
+                JUnitGenParser.MethodDeclarationContext methodCtx = classElement.methodDeclaration();
+                for (JUnitGenParser.ParamDeclarationContext param : methodCtx.paramDeclaration()) {
+                    if(param.paramType.ID() != null) {
+                        Param currentParam = new Param(param.paramType.getText(), param.paramName.getText());
+
+                        if (!containsParam(mockFunctionParam, currentParam)) {
+                            mockFunctionParam.add(currentParam);
+                        }
+                    }
+                }
+            }
+
             if (classElement.constructorDeclaration() != null) {
                 Constructor currentConstructor = new Constructor();
                 for (JUnitGenParser.ParamDeclarationContext param : classElement.constructorDeclaration().paramDeclaration()) {
                     currentConstructor.setParam(new Param(param.paramType.getText(), param.paramName.getText()));
                     if(param.paramType.ID() != null) {
                         Param currentParam = new Param(param.paramType.ID().getText(), param.paramName.getText());
-                        if (!containsParam(mockTypes, currentParam)) {
+                        if (!containsParam(mockTypes, currentParam))
                             mockTypes.add(currentParam);
-                            System.out.println("const: " + param.paramName.getText());
-                        }
                     }
                 }
                 mockConstructors.add(currentConstructor);
-            }
-        }
-    }
-
-    /**
-     * go through fields to get mocks
-     * @param ctx
-     */
-    private void mockFieldCreation(JUnitGenParser.ClassDeclarationContext ctx) {
-        for (JUnitGenParser.ClassBodyElementContext classElement : ctx.classBodyElement()) {
-            if (classElement.field() != null && classElement.field().fieldType.ID() != null) {
-                Param currentParam = new Param(classElement.field().fieldType.ID().getText(),
-                        classElement.field().fieldName.getText());
-
-                if (!containsParam(mockTypes, currentParam)) {
-                    mockTypes.add(currentParam);
-                    System.out.println("field: " + classElement.field().fieldName.getText());
-                }
             }
         }
     }
@@ -161,6 +166,7 @@ public class TestDataCollectorVisitor extends JUnitGenBaseVisitor<Void> {
     public String getClassName() { return className; }
     public List<Constructor> getMockConstructors() { return mockConstructors; }
     public List<Param> getMockTypes() { return mockTypes; }
+    public List<Param> getMockFunctionParam() { return mockFunctionParam; }
     public JUnitGenParser.MethodDeclarationContext getLastMethod() { return lastMethod; }
     public List<String> getExpressions() { return expressions; }
     public List<Param> getMethodParams() { return methodParams; }
