@@ -15,7 +15,7 @@ import { MonacoEditorModule } from '@materia-ui/ngx-monaco-editor';
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    MonacoEditorModule
+    MonacoEditorModule,
   ],
   providers: [
     provideClientHydration(withEventReplay())

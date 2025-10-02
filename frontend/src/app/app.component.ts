@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { TestGeneratorService } from './services/test-generator.service';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { TestGeneratorService, ValidationError } from './services/test-generator.service';
+import { MonacoEditorComponent } from '@materia-ui/ngx-monaco-editor';
 
 @Component({
   selector: 'app-root',
@@ -33,6 +34,28 @@ export class AppComponent {
     automaticLayout: true
   };
 
+  testEditorInstance!: monaco.editor.IStandaloneCodeEditor;
+
+  @ViewChild(MonacoEditorComponent) monacoComp!: MonacoEditorComponent;
+
+  ngAfterViewInit() {
+    this.testEditorInstance = this.monacoComp.editor;
+  }
+
+  onTestEditorInit(editor: any): void {
+    this.testEditorInstance = editor;
+
+    editor.onDidChangeModelContent(() => {
+      console.log('Editor changed');
+      console.log(this.testEditorInstance.getValue());
+
+      this.generatorService.validate(this.testEditorInstance.getValue()).subscribe({
+        next: (errors) => this.applyValidationMarkers(errors),
+        error: (err) => console.error('Validation error:', err)
+      });
+    });
+  }
+
   constructor(private generatorService: TestGeneratorService) {}
 
   toggleSidebar(): void {
@@ -45,6 +68,25 @@ export class AppComponent {
       ...this.editorOptions,
       theme: this.theme
     };
+  }
+
+  applyValidationMarkers(errors: ValidationError[]): void {
+    const model = this.testEditorInstance.getModel();
+
+    if (!model) return;
+
+    const markers: monaco.editor.IMarkerData[] = errors.map(err => ({
+      severity: monaco.MarkerSeverity.Error,
+      message: err.message,
+      startLineNumber: err.line,
+      startColumn: err.column,
+      endLineNumber: err.line,
+      endColumn: err.length,
+    }));
+
+    console.log(errors);
+
+    monaco.editor.setModelMarkers(model!, model.uri.toString(), markers);
   }
 
   generate(): void {
@@ -86,3 +128,4 @@ export class AppComponent {
     this.errorMessage = '';
   }
 }
+

@@ -53,6 +53,18 @@ public class ParamGenBaseListener implements ParamGenListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterWhenSet(ParamGenParser.WhenSetContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitWhenSet(ParamGenParser.WhenSetContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterParamSet(ParamGenParser.ParamSetContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -65,6 +77,30 @@ public class ParamGenBaseListener implements ParamGenListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterWhenSpec(ParamGenParser.WhenSpecContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitWhenSpec(ParamGenParser.WhenSpecContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterThrowVal(ParamGenParser.ThrowValContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitThrowVal(ParamGenParser.ThrowValContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterMockSpec(ParamGenParser.MockSpecContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -72,6 +108,18 @@ public class ParamGenBaseListener implements ParamGenListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitMockSpec(ParamGenParser.MockSpecContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterConditionExpr(ParamGenParser.ConditionExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitConditionExpr(ParamGenParser.ConditionExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

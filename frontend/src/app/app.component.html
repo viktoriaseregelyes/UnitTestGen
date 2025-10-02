@@ -37,7 +37,7 @@
               <ngx-monaco-editor class="monaco" [options]="editorOptions" [(ngModel)]="infoButton"></ngx-monaco-editor>
           </span>
         </div>
-        <ngx-monaco-editor class="monaco" [options]="editorOptions" [(ngModel)]="testCases"></ngx-monaco-editor>
+        <ngx-monaco-editor class="monaco" [options]="editorOptions" [(ngModel)]="testCases" (init)="onTestEditorInit($event)"></ngx-monaco-editor>
       </aside>
     </div>
 

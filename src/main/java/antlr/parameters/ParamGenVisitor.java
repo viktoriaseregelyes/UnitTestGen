@@ -29,17 +29,41 @@ public interface ParamGenVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitMockSet(ParamGenParser.MockSetContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link ParamGenParser#whenSet}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitWhenSet(ParamGenParser.WhenSetContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link ParamGenParser#paramSet}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitParamSet(ParamGenParser.ParamSetContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link ParamGenParser#whenSpec}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitWhenSpec(ParamGenParser.WhenSpecContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ParamGenParser#throwVal}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitThrowVal(ParamGenParser.ThrowValContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link ParamGenParser#mockSpec}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitMockSpec(ParamGenParser.MockSpecContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ParamGenParser#conditionExpr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitConditionExpr(ParamGenParser.ConditionExprContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link ParamGenParser#paramSpec}.
 	 * @param ctx the parse tree

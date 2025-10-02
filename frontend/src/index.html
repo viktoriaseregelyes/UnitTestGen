@@ -6,13 +6,14 @@
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <!-- <script>
-  window.MonacoEnvironment = {
-    getWorkerUrl: function (moduleId, label) {
-      return `assets/monaco-editor/min/vs/base/worker/workerMain.js`;
-    }
-  };
-</script> -->
+  <script>
+    window.MonacoEnvironment = {
+      getWorkerUrl: function (moduleId, label) {
+        // return `assets/monaco-editor/min/vs/base/worker/workerMain.js`;
+        return null;
+      }
+    };
+  </script>
 </head>
 <body>
   <app-root></app-root>

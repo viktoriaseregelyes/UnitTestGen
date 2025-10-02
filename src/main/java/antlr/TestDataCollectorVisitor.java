@@ -5,17 +5,14 @@ import antlr.parameters.*;
 
 public class TestDataCollectorVisitor extends JUnitGenBaseVisitor<Void> {
     private String className;
-
-    private final List<Constructor> mockConstructors = new ArrayList<>();
-    private final List<Param> mockTypes = new ArrayList<>();
+    private final List<Constructor> mockConstructors = new ArrayList<>(); // constructors which may contains mock types
+    private final List<Param> mockTypes = new ArrayList<>(); // fields mocks
     private final List<Param> mockFunctionParam = new ArrayList<>();
     private final List<String> expressions = new ArrayList<>();
     private final List<Param> methodParams = new ArrayList<>(); // a methods input params and local params
-    private final List<String> ifStatements = new ArrayList<>();
 
     private final Map<String, ArrayList<String>> mockMethodParams = new HashMap<>(); // mock methods parameters for verify()
-
-    private JUnitGenParser.MethodDeclarationContext lastMethod;
+    private JUnitGenParser.MethodDeclarationContext lastMethod; // last method to be tested
 
     @Override
     public Void visitClassDeclaration(JUnitGenParser.ClassDeclarationContext ctx) {
@@ -42,14 +39,6 @@ public class TestDataCollectorVisitor extends JUnitGenBaseVisitor<Void> {
                         expressions.add(noParams);
                 }
                 return super.visitExpr(ctx);
-            }
-        });
-        ctx.accept(new JUnitGenBaseVisitor<Void>() {
-            @Override
-            public Void visitIfStmt(JUnitGenParser.IfStmtContext ctx) {
-                String conditionExpr = ctx.expr().getText();
-                ifStatements.add(conditionExpr);
-                return super.visitIfStmt(ctx);
             }
         });
         ctx.accept(new JUnitGenBaseVisitor<Void>() {
@@ -91,7 +80,6 @@ public class TestDataCollectorVisitor extends JUnitGenBaseVisitor<Void> {
         expressions.clear();
         methodParams.clear();
         mockMethodParams.clear();
-        ifStatements.clear();
     }
 
     private boolean methodParamExist(String paramName) {
@@ -131,9 +119,7 @@ public class TestDataCollectorVisitor extends JUnitGenBaseVisitor<Void> {
                     if(param.paramType.ID() != null) {
                         Param currentParam = new Param(param.paramType.getText(), param.paramName.getText());
 
-                        if (!containsParam(mockFunctionParam, currentParam)) {
-                            mockFunctionParam.add(currentParam);
-                        }
+                        if (!containsParam(mockFunctionParam, currentParam)) mockFunctionParam.add(currentParam);
                     }
                 }
             }
@@ -144,8 +130,7 @@ public class TestDataCollectorVisitor extends JUnitGenBaseVisitor<Void> {
                     currentConstructor.setParam(new Param(param.paramType.getText(), param.paramName.getText()));
                     if(param.paramType.ID() != null) {
                         Param currentParam = new Param(param.paramType.ID().getText(), param.paramName.getText());
-                        if (!containsParam(mockTypes, currentParam))
-                            mockTypes.add(currentParam);
+                        if (!containsParam(mockTypes, currentParam)) mockTypes.add(currentParam);
                     }
                 }
                 mockConstructors.add(currentConstructor);
@@ -170,6 +155,5 @@ public class TestDataCollectorVisitor extends JUnitGenBaseVisitor<Void> {
     public JUnitGenParser.MethodDeclarationContext getLastMethod() { return lastMethod; }
     public List<String> getExpressions() { return expressions; }
     public List<Param> getMethodParams() { return methodParams; }
-    public List<String> getIfStatements() { return ifStatements; }
     public Map<String, ArrayList<String>> getMockMethodParams() { return mockMethodParams; }
 }

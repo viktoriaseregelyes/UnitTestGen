@@ -43,7 +43,7 @@ public class MyJUnitTestVisitor extends JUnitGenBaseVisitor<Void> {
         basicImports();
         inputManager.loadParamAndInput();
 
-        if(!dataCollectorVisitor.getMockTypes().isEmpty() || !dataCollectorVisitor.getMockFunctionParam().isEmpty())
+        if(!dataCollectorVisitor.getMockTypes().isEmpty() || !dataCollectorVisitor.getMockFunctionParam().isEmpty() || !inputManager.getGlobalWhens().isEmpty() || inputManager.localWhenAppears())
             mockImports();
 
         classSetup();
@@ -65,16 +65,24 @@ public class MyJUnitTestVisitor extends JUnitGenBaseVisitor<Void> {
     }
 
     private void writeTestMethod(Test currentTest, JUnitGenParser.MethodDeclarationContext ctx) {
-        writer.writeLine("\t@Test\n" +
-                "\tvoid " + currentTest.getTestName() + "() {\n");
+        writer.writeLine("\t@Test\n" + "\tvoid " + currentTest.getTestName() + "() {\n");
 
-        for (Assert currentAssert : currentTest.getAssertions()) {
-            for (Param currentParam : currentAssert.getParams()) {
-                if ((currentAssert.getExpection() != null || currentAssert.getExpect() != null) && currentParam.getValue().size() > 1) {
-                    writer.writeLine("\t\t" + currentParam.getType() + " " + currentParam.getParamName() + " = " + currentParam.getValue() + ";\n");
-                }
+        if(!currentTest.getWhens().isEmpty()) {
+            for (WhenRule whens : currentTest.getWhens()) {
+                writer.writeLine("\t\twhen(" + whens.getCondition() + ")");
+                if (!whens.getReturnValue().equals("NaN"))
+                    writer.writeLine(".thenReturn(" + whens.getReturnValue() + ")");
+                if (!whens.getThrowValue().equals("NaN"))
+                    writer.writeLine(".thenThrow(" + whens.getThrowValue() + ")");
+
+                writer.writeLine(";\n");
             }
         }
+
+        for (Assert currentAssert : currentTest.getAssertions())
+            for (Param currentParam : currentAssert.getParams())
+                if ((currentAssert.getExpection() != null || currentAssert.getExpect() != null) && currentParam.getValue().size() > 1)
+                    writer.writeLine("\t\t" + currentParam.getType() + " " + currentParam.getParamName() + " = " + currentParam.getValue() + ";\n");
 
         for (Assert currentAssert : currentTest.getAssertions()) {
             if (currentAssert.getExpect() != null) writeBasicAssertion(currentTest, currentAssert);
@@ -196,6 +204,7 @@ public class MyJUnitTestVisitor extends JUnitGenBaseVisitor<Void> {
     private void testSetupBeforeEach() {
         writer.writeLine("\t@BeforeEach\n");
         writer.writeLine("\tvoid setUp() {\n");
+
         for(Param mockType : dataCollectorVisitor.getMockTypes()) {
             if(inputManager.getInputMockClasses().containsKey(mockType.getType()))
                 writer.writeLine("\t\tthis." + mockType.getParamName() + " = new " + inputManager.getInputMockClasses().get(mockType.getType()) + "();\n");
@@ -220,7 +229,21 @@ public class MyJUnitTestVisitor extends JUnitGenBaseVisitor<Void> {
             }
             useConstructor();
         }
-        writer.writeLine(");\n\t}\n\n");
+
+        writer.writeLine(");\n");
+
+        if(!inputManager.getGlobalWhens().isEmpty())
+            for (WhenRule whens : inputManager.getGlobalWhens()) {
+                writer.writeLine("\t\twhen(" + whens.getCondition() + ")");
+                if (!whens.getReturnValue().equals("NaN"))
+                    writer.writeLine(".thenReturn(" + whens.getReturnValue() + ")");
+                if (!whens.getThrowValue().equals("NaN"))
+                    writer.writeLine(".thenThrow(" + whens.getThrowValue() + ")");
+
+                writer.writeLine(";\n");
+            }
+
+        writer.writeLine("\t}\n\n");
     }
 
     /**

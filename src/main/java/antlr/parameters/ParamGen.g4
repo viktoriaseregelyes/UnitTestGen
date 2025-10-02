@@ -1,6 +1,6 @@
 grammar ParamGen;
 
-templateFile: constructorSet? mockSet? paramSet*;
+templateFile: constructorSet? mockSet? whenSet? paramSet*;
 
 constructorSet:
     'CONSTRUCTOR'
@@ -10,14 +10,27 @@ mockSet:
     'MOCKING'
     mockSpec+;
 
+whenSet:
+    'WHEN_RULES'
+    whenSpec+;
+
 paramSet:
     'TEST' testName=ID
     'METHOD' methodName=ID
     paramSpec+
+    whenSpec*
     expectation?;
+
+whenSpec:
+    'WHEN' conditionExpr (('RETURNS' returnVal=literal ('THROW' throwVal)?) | ('THROW' throwVal));
+
+throwVal:
+    ID ('.' ID)?;
 
 mockSpec:
     'MOCK' ID ID;
+
+conditionExpr: ID (LPAREN ID? (',' ID)* RPAREN)?;
 
 paramSpec:
     'PARAM' paramType=type paramName=ID paramInput;
@@ -53,6 +66,8 @@ literal: INT
 
 LANGLE: '[';
 RANGLE: ']';
+LPAREN: '(';
+RPAREN: ')';
 BOOLEAN: 'true' | 'false';
 NOTNULL: 'notnull';
 NULL: 'null';

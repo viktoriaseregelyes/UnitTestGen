@@ -1,7 +1,9 @@
 package main.controller;
 
 import antlr.*;
+import antlr.parameters.*;
 
+import main.error.ValidationError;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +13,8 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -42,8 +46,46 @@ public class GeneratorController {
             e.printStackTrace();
             return ResponseEntity.ofNullable("Failed to load input.");
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body("Ismeretlen hiba: " + e.getMessage());
+            return ResponseEntity.internalServerError().body("Unexpected error " + e.getMessage());
         }
+    }
+
+    @PostMapping("/validate")
+    public ResponseEntity<List<ValidationError>> validate(@RequestBody TestRequest request) {
+        String testCases = request.testCases;
+
+        CharStream input = CharStreams.fromString(testCases);
+        ParamGenLexer lexer = new ParamGenLexer(input);
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+        ParamGenParser parser = new ParamGenParser(tokens);
+
+        List<ValidationError> errors = new ArrayList<>();
+
+        parser.removeErrorListeners();
+        parser.addErrorListener(new BaseErrorListener() {
+            @Override
+            public void syntaxError(Recognizer<?, ?> recognizer,
+                                    Object offendingSymbol,
+                                    int line, int charPositionInLine,
+                                    String msg,
+                                    RecognitionException e) {
+
+                int length = 1;
+                if (offendingSymbol instanceof Token) {
+                    Token t = (Token) offendingSymbol;
+                    int start = t.getStartIndex();
+                    int stop = t.getStopIndex();
+                    if (start >= 0 && stop >= start) {
+                        length = stop - start + 1;
+                    }
+                }
+
+                errors.add(new ValidationError(line, charPositionInLine, msg, length));
+            }
+        });
+
+        parser.templateFile();
+        return ResponseEntity.ok(errors);
     }
 
     public void generate(String inputClass) throws Exception {

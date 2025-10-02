@@ -12,6 +12,7 @@ public class TestInputManager {
     private final TestDataCollectorVisitor dataCollectorVisitor;
     private final MyParamVisitor paramVisitor = new MyParamVisitor();
     private List<Test> inputTests = new ArrayList<>();
+    private List<WhenRule> globalWhens = new ArrayList<>();
     private Constructor inputConstructor = new Constructor();
     private Map<String, String> inputMockClasses = new HashMap<>();
 
@@ -49,12 +50,21 @@ public class TestInputManager {
             this.inputTests = paramVisitor.getAllTest();
             this.inputMockClasses = paramVisitor.getMockClasses();
             this.inputConstructor = paramVisitor.getConstructor();
+            this.globalWhens = paramVisitor.getGlobalWhens();
         } catch (IOException e) {
             throw new RuntimeException("Could not read parameter file", e);
         }
     }
 
+    public boolean localWhenAppears() {
+        for(Test test : this.inputTests)
+            if(!test.getWhens().isEmpty())
+                return true;
+        return false;
+    }
+
     public List<Test> getInputTests() { return this.inputTests; }
     public Constructor getInputConstructor() { return this.inputConstructor; }
     public Map<String, String> getInputMockClasses() { return this.inputMockClasses; }
+    public List<WhenRule> getGlobalWhens() { return globalWhens; }
 }

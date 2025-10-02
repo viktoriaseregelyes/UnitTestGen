@@ -38,6 +38,16 @@ public interface ParamGenListener extends ParseTreeListener {
 	 */
 	void exitMockSet(ParamGenParser.MockSetContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link ParamGenParser#whenSet}.
+	 * @param ctx the parse tree
+	 */
+	void enterWhenSet(ParamGenParser.WhenSetContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ParamGenParser#whenSet}.
+	 * @param ctx the parse tree
+	 */
+	void exitWhenSet(ParamGenParser.WhenSetContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link ParamGenParser#paramSet}.
 	 * @param ctx the parse tree
 	 */
@@ -48,6 +58,26 @@ public interface ParamGenListener extends ParseTreeListener {
 	 */
 	void exitParamSet(ParamGenParser.ParamSetContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link ParamGenParser#whenSpec}.
+	 * @param ctx the parse tree
+	 */
+	void enterWhenSpec(ParamGenParser.WhenSpecContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ParamGenParser#whenSpec}.
+	 * @param ctx the parse tree
+	 */
+	void exitWhenSpec(ParamGenParser.WhenSpecContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ParamGenParser#throwVal}.
+	 * @param ctx the parse tree
+	 */
+	void enterThrowVal(ParamGenParser.ThrowValContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ParamGenParser#throwVal}.
+	 * @param ctx the parse tree
+	 */
+	void exitThrowVal(ParamGenParser.ThrowValContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link ParamGenParser#mockSpec}.
 	 * @param ctx the parse tree
 	 */
@@ -57,6 +87,16 @@ public interface ParamGenListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitMockSpec(ParamGenParser.MockSpecContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ParamGenParser#conditionExpr}.
+	 * @param ctx the parse tree
+	 */
+	void enterConditionExpr(ParamGenParser.ConditionExprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ParamGenParser#conditionExpr}.
+	 * @param ctx the parse tree
+	 */
+	void exitConditionExpr(ParamGenParser.ConditionExprContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link ParamGenParser#paramSpec}.
 	 * @param ctx the parse tree
