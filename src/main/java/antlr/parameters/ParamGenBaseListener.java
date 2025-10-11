@@ -77,6 +77,42 @@ public class ParamGenBaseListener implements ParamGenListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterVariationSpec(ParamGenParser.VariationSpecContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitVariationSpec(ParamGenParser.VariationSpecContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterVarFor(ParamGenParser.VarForContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitVarFor(ParamGenParser.VarForContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterVarInput(ParamGenParser.VarInputContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitVarInput(ParamGenParser.VarInputContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterWhenSpec(ParamGenParser.WhenSpecContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -156,6 +192,30 @@ public class ParamGenBaseListener implements ParamGenListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitExpectation(ParamGenParser.ExpectationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterExpectFor(ParamGenParser.ExpectForContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitExpectFor(ParamGenParser.ExpectForContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterExpectInput(ParamGenParser.ExpectInputContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitExpectInput(ParamGenParser.ExpectInputContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

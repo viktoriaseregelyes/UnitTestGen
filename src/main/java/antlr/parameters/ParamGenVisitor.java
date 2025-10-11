@@ -41,6 +41,24 @@ public interface ParamGenVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitParamSet(ParamGenParser.ParamSetContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link ParamGenParser#variationSpec}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitVariationSpec(ParamGenParser.VariationSpecContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ParamGenParser#varFor}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitVarFor(ParamGenParser.VarForContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ParamGenParser#varInput}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitVarInput(ParamGenParser.VarInputContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link ParamGenParser#whenSpec}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -82,6 +100,18 @@ public interface ParamGenVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitExpectation(ParamGenParser.ExpectationContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ParamGenParser#expectFor}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExpectFor(ParamGenParser.ExpectForContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ParamGenParser#expectInput}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExpectInput(ParamGenParser.ExpectInputContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link ParamGenParser#type}.
 	 * @param ctx the parse tree

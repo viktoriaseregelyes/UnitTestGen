@@ -12,11 +12,13 @@ public class MyParamVisitor extends ParamGenBaseVisitor<Void> {
     private Test currentTest;
     private Assert currentAssert;
     private Param currentParam;
+    private Param currentVariation;
     private Constructor constructor = null;
     private ArrayList<Param> params = new ArrayList<>();
-    private ArrayList<String> values = new ArrayList<>();
+    private ArrayList<Param> variations = new ArrayList<>();
     private ArrayList<WhenRule> globalWhens = new ArrayList<>();
     private HashMap<String, String> mockClasses = new HashMap<>();
+    private int repeatTime;
 
     @Override
     public Void visitConstructorSet(ParamGenParser.ConstructorSetContext ctx) {
@@ -32,11 +34,76 @@ public class MyParamVisitor extends ParamGenBaseVisitor<Void> {
         if ((ctx.methodName.getText().equals("<missing ID>"))) errorHandler.throwError("missing testing method name");
         if (ctx.getText().contains("<missing 'METHOD'>")) errorHandler.throwError("missing 'METHOD' command");
 
-        currentTest = new Test(ctx.testName.getText(), ctx.methodName.getText());
+        if(ctx.getText().contains("REPEAT")) {
+            repeatTime = Integer.parseInt((ctx.repeatTimes.getText()));
+            if ((ctx.repeatTimes.getText().equals("<missing INT>"))) errorHandler.throwError("missing repeatTime");
+        }
+        else repeatTime = 1;
+
+        currentTest = new Test(ctx.testName.getText(), ctx.methodName.getText(), repeatTime);
         currentAssert = new Assert();
         params = new ArrayList<>();
+        variations = new ArrayList<>();
 
         return super.visitParamSet(ctx);
+    }
+
+    @Override
+    public Void visitVariationSpec(ParamGenParser.VariationSpecContext ctx) {
+        if (ctx.getText().contains("<missing ID>")) errorHandler.throwError("missing variation type or name");
+
+        currentVariation = new Param(ctx.varType.getText(), ctx.varName.getText());
+
+        return super.visitVariationSpec(ctx);
+    }
+
+    @Override
+    public Void visitVarFor(ParamGenParser.VarForContext ctx) {
+        int start = Integer.parseInt(ctx.INT(0).getText());
+        int end = Integer.parseInt(ctx.INT(1).getText());
+
+        if((end - start + 1) != repeatTime)
+            errorHandler.throwError("the defined loop is not as long as the repeatTime");
+
+        ArrayList<String> varValue = new ArrayList<>();
+
+        if (start <= end)
+            for (int value = start; value <= end; value++) varValue.add(String.valueOf(value));
+        else
+            for (int value = start; value >= end; value--) varValue.add(String.valueOf(value));
+
+        currentVariation.setValue(varValue);
+        variations.add(currentVariation);
+
+        if(!ctx.parent.getParent().getText().contains("EXPECT") && !ctx.parent.getParent().getText().contains("EXPECT_EXCEPTION") && !ctx.parent.getParent().getText().contains("PARAM")) {
+            currentAssert.setVariations(variations);
+            currentTest.addAssert(currentAssert);
+            tests.add(currentTest);
+        }
+
+        return super.visitVarFor(ctx);
+    }
+
+    @Override
+    public Void visitVarInput(ParamGenParser.VarInputContext ctx) {
+        if (ctx.getText().equals(ctx.getStart().getText())) errorHandler.throwError("missing variation values");
+        if (ctx.literal().size() != repeatTime) errorHandler.throwError("the defined array is not as long as the repeatTime");
+
+        ArrayList<String> varValue = new ArrayList<>();
+
+        for (var lit : ctx.literal())
+            varValue.add(lit.getText());
+
+        currentVariation.setValue(varValue);
+        variations.add(currentVariation);
+
+        if(!ctx.parent.getParent().getText().contains("EXPECT") && !ctx.parent.getParent().getText().contains("EXPECT_EXCEPTION") && !ctx.parent.getParent().getText().contains("PARAM")) {
+            currentAssert.setVariations(variations);
+            currentTest.addAssert(currentAssert);
+            tests.add(currentTest);
+        }
+
+        return super.visitVarInput(ctx);
     }
 
     @Override
@@ -92,7 +159,7 @@ public class MyParamVisitor extends ParamGenBaseVisitor<Void> {
 
     @Override
     public Void visitParamInput(ParamGenParser.ParamInputContext ctx) {
-        values = new ArrayList<>();
+        ArrayList<String> values = new ArrayList<>();
 
         if (ctx.getText().equals(ctx.getStart().getText()))
             errorHandler.throwError("missing value");
@@ -115,7 +182,7 @@ public class MyParamVisitor extends ParamGenBaseVisitor<Void> {
         params.add(currentParam);
 
         if(ctx.parent.getParent().getText().contains("CONSTRUCTOR")) constructor.setParams(params);
-        else if(!ctx.parent.getParent().getText().contains("EXPECT") && !ctx.parent.getParent().getText().contains("EXPECT_EXCEPTION")) {
+        else if(!ctx.parent.getParent().getText().contains("EXPECT") && !ctx.parent.getParent().getText().contains("EXPECT_EXCEPTION") && !ctx.parent.getParent().getText().contains("VARIATION")) {
             currentAssert.setParams(params);
             currentTest.addAssert(currentAssert);
             tests.add(currentTest);
@@ -130,7 +197,6 @@ public class MyParamVisitor extends ParamGenBaseVisitor<Void> {
 
         switch (ctx.getStart().getText()) {
             case "EXPECT":
-                currentAssert.setExpect(ctx.literal().getText());
                 break;
 
             case "EXPECT_EXCEPTION":
@@ -145,11 +211,44 @@ public class MyParamVisitor extends ParamGenBaseVisitor<Void> {
                 errorHandler.throwError("missing exception declaration");
         }
 
-        currentAssert.setParams(params);
+        if(!params.isEmpty()) currentAssert.setParams(params);
+        if(!variations.isEmpty()) currentAssert.setVariations(variations);
         currentTest.addAssert(currentAssert);
         tests.add(currentTest);
 
         return super.visitExpectation(ctx);
+    }
+
+    @Override
+    public Void visitExpectFor(ParamGenParser.ExpectForContext ctx) {
+        int start = Integer.parseInt(ctx.INT(0).getText());
+        int end = Integer.parseInt(ctx.INT(1).getText());
+
+        if((end - start + 1) != repeatTime)
+            errorHandler.throwError("the defined loop is not as long as the repeatTime");
+
+        ArrayList<String> expect = new ArrayList<>();
+
+        if (start <= end)
+            for (int value = start; value <= end; value++) expect.add(String.valueOf(value));
+        else
+            for (int value = start; value >= end; value--) expect.add(String.valueOf(value));
+
+        currentAssert.setExpect(expect);
+
+        return super.visitExpectFor(ctx);
+    }
+
+    @Override
+    public Void visitExpectInput(ParamGenParser.ExpectInputContext ctx) {
+        ArrayList<String> expect = new ArrayList<>();
+
+        for(int repeat = 0; repeat < ctx.literal().size(); repeat++)
+            expect.add(ctx.literal(repeat).getText());
+
+        currentAssert.setExpect(expect);
+
+        return super.visitExpectInput(ctx);
     }
 
     public ArrayList<Test> getAllTest() { return tests; }

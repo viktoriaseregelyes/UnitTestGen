@@ -16,10 +16,18 @@ whenSet:
 
 paramSet:
     'TEST' testName=ID
+    ('REPEAT' repeatTimes=INT)?
     'METHOD' methodName=ID
-    paramSpec+
+    paramSpec*
+    variationSpec*
     whenSpec*
     expectation?;
+
+variationSpec: 'VARIATION' varType=type varName=ID 'VALUES' (varInput | varFor);
+
+varFor: 'FOR' INT 'TO' INT;
+
+varInput: '[' literal (',' literal)* ']';
 
 whenSpec:
     'WHEN' conditionExpr (('RETURNS' returnVal=literal ('THROW' throwVal)?) | ('THROW' throwVal));
@@ -39,8 +47,12 @@ paramInput: 'VALUE' literal
     | 'VALUES' '[' literal (',' literal)* ']';
 
 expectation:
-    'EXPECT' NOT? literal
+    'EXPECT' (expectInput | literal | expectFor)
     | 'EXPECT_EXCEPTION' ID ('(' exceptionMessage=STRING ')')?;
+
+expectFor: 'FOR' INT 'TO' INT;
+
+expectInput: '[' literal (',' literal)* ']';
 
 type: 'int'
     | 'float'

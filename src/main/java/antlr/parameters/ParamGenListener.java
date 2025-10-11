@@ -58,6 +58,36 @@ public interface ParamGenListener extends ParseTreeListener {
 	 */
 	void exitParamSet(ParamGenParser.ParamSetContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link ParamGenParser#variationSpec}.
+	 * @param ctx the parse tree
+	 */
+	void enterVariationSpec(ParamGenParser.VariationSpecContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ParamGenParser#variationSpec}.
+	 * @param ctx the parse tree
+	 */
+	void exitVariationSpec(ParamGenParser.VariationSpecContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ParamGenParser#varFor}.
+	 * @param ctx the parse tree
+	 */
+	void enterVarFor(ParamGenParser.VarForContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ParamGenParser#varFor}.
+	 * @param ctx the parse tree
+	 */
+	void exitVarFor(ParamGenParser.VarForContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ParamGenParser#varInput}.
+	 * @param ctx the parse tree
+	 */
+	void enterVarInput(ParamGenParser.VarInputContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ParamGenParser#varInput}.
+	 * @param ctx the parse tree
+	 */
+	void exitVarInput(ParamGenParser.VarInputContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link ParamGenParser#whenSpec}.
 	 * @param ctx the parse tree
 	 */
@@ -127,6 +157,26 @@ public interface ParamGenListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitExpectation(ParamGenParser.ExpectationContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ParamGenParser#expectFor}.
+	 * @param ctx the parse tree
+	 */
+	void enterExpectFor(ParamGenParser.ExpectForContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ParamGenParser#expectFor}.
+	 * @param ctx the parse tree
+	 */
+	void exitExpectFor(ParamGenParser.ExpectForContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ParamGenParser#expectInput}.
+	 * @param ctx the parse tree
+	 */
+	void enterExpectInput(ParamGenParser.ExpectInputContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ParamGenParser#expectInput}.
+	 * @param ctx the parse tree
+	 */
+	void exitExpectInput(ParamGenParser.ExpectInputContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link ParamGenParser#type}.
 	 * @param ctx the parse tree

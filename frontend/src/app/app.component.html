@@ -20,6 +20,7 @@
                   <li><strong>MOCKING</strong> – optional section, definition of mock objects. Example: <code>MOCK Service serviceMock</code></li>
                   <li><strong>TEST</strong> – start of a new test case.
                     <ul>
+                      <li><strong>REPEAT</strong> – number of test repetitions.</li>
                       <li><strong>METHOD</strong> – name of the method to be tested.</li>
                       <li><strong>PARAM</strong> – method parameters and their values:
                         <ul>
@@ -27,7 +28,19 @@
                           <li><code>VALUES [x, y, z]</code> – multiple values</li>
                         </ul>
                       </li>
-                      <li><strong>EXPECT</strong> – expected output (<code>not</code> prefix for negation)</li>
+                      <li><strong>VARIATION</strong> –method parameters that appear in tests with variable parameter values:
+                        <ul>
+                          <li><code>VALUES [x, y, z]</code> – multiple values</li>
+                          <li><code>VALUES FOR x TO y</code> – numbers in sequence</li>
+                        </ul>
+                      </li>
+                      <li><strong>EXPECT</strong> – expected output (<code>not</code> prefix for negation)
+                        <ul>
+                          <li><code>x</code> – a single value</li>
+                          <li><code>[x, y, z]</code> – multiple values</li>
+                          <li><code>FOR x TO y</code> – numbers in sequence</li>
+                        </ul>
+                      </li>
                       <li><strong>EXPECT_EXCEPTION</strong> – expected exception, with optional message</li>
                   </ul>
                 </li>

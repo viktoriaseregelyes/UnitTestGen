@@ -2,8 +2,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 
-import static org.mockito.Mockito.*;
-
 class ClassNameTest {
 	private ClassName className;
 
@@ -13,9 +11,18 @@ class ClassNameTest {
 	}
 
 	@Test
-	void testName() {
-		when(valami(e,e)).thenReturn(true).thenThrow(IllegalStateException.class);
-		assertEquals(10, className.name(10, 0));
+	void testName0() {
+		assertEquals(1, className.name(10, 0));
+	}
+
+	@Test
+	void testName1() {
+		assertEquals(2, className.name(10, 1));
+	}
+
+	@Test
+	void testName2() {
+		assertEquals(3, className.name(10, 5));
 	}
 
 }

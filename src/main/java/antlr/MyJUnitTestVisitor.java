@@ -65,60 +65,76 @@ public class MyJUnitTestVisitor extends JUnitGenBaseVisitor<Void> {
     }
 
     private void writeTestMethod(Test currentTest, JUnitGenParser.MethodDeclarationContext ctx) {
-        writer.writeLine("\t@Test\n" + "\tvoid " + currentTest.getTestName() + "() {\n");
+        for(int repeat = 0; repeat < currentTest.getRepeatTime(); repeat++) {
+            writer.writeLine("\t@Test\n" + "\tvoid " + currentTest.getTestName() + repeat + "() {\n");
 
-        if(!currentTest.getWhens().isEmpty()) {
-            for (WhenRule whens : currentTest.getWhens()) {
-                writer.writeLine("\t\twhen(" + whens.getCondition() + ")");
-                if (!whens.getReturnValue().equals("NaN"))
-                    writer.writeLine(".thenReturn(" + whens.getReturnValue() + ")");
-                if (!whens.getThrowValue().equals("NaN"))
-                    writer.writeLine(".thenThrow(" + whens.getThrowValue() + ")");
+            if (!currentTest.getWhens().isEmpty()) {
+                for (WhenRule whens : currentTest.getWhens()) {
+                    writer.writeLine("\t\twhen(" + whens.getCondition() + ")");
+                    if (!whens.getReturnValue().equals("NaN"))
+                        writer.writeLine(".thenReturn(" + whens.getReturnValue() + ")");
+                    if (!whens.getThrowValue().equals("NaN"))
+                        writer.writeLine(".thenThrow(" + whens.getThrowValue() + ")");
 
-                writer.writeLine(";\n");
+                    writer.writeLine(";\n");
+                }
             }
-        }
 
-        for (Assert currentAssert : currentTest.getAssertions())
-            for (Param currentParam : currentAssert.getParams())
-                if ((currentAssert.getExpection() != null || currentAssert.getExpect() != null) && currentParam.getValue().size() > 1)
-                    writer.writeLine("\t\t" + currentParam.getType() + " " + currentParam.getParamName() + " = " + currentParam.getValue() + ";\n");
+            for (Assert currentAssert : currentTest.getAssertions())
+                if(currentAssert.getParams() != null)
+                    for (Param currentParam : currentAssert.getParams())
+                        if ((currentAssert.getExpection() != null || currentAssert.getExpect() != null) && currentParam.getValue().size() > 1)
+                            writer.writeLine("\t\t" + currentParam.getType() + " " + currentParam.getParamName() + " = " + currentParam.getValue() + ";\n");
 
-        for (Assert currentAssert : currentTest.getAssertions()) {
-            if (currentAssert.getExpect() != null) writeBasicAssertion(currentTest, currentAssert);
-            else if (currentAssert.getExpection() != null) writeExceptionAssertion(currentTest, currentAssert);
+            for (Assert currentAssert : currentTest.getAssertions()) {
+                if (currentAssert.getExpect().size() == 1) writeBasicAssertion(currentTest, currentAssert, 0);
+                if (currentAssert.getExpect().size() > 1) writeBasicAssertion(currentTest, currentAssert, repeat);
+                else if (currentAssert.getExpection() != null) writeExceptionAssertion(currentTest, currentAssert);
 
-            for(int i = 0; i < ctx.paramDeclaration().size(); i++) {
-                boolean found = false;
+                for (int i = 0; i < ctx.paramDeclaration().size(); i++) {
+                    boolean found = false;
 
-                for (Param currentParam : currentAssert.getParams()) {
-                    if((currentAssert.getExpection() != null || currentAssert.getExpect() != null) && ctx.paramDeclaration(i).paramName.getText().equals(currentParam.getParamName())) {
-                        found = true;
+                    if(currentAssert.getParams() != null) {
+                        for (Param currentParam : currentAssert.getParams()) {
+                            if ((currentAssert.getExpection() != null || currentAssert.getExpect() != null) && ctx.paramDeclaration(i).paramName.getText().equals(currentParam.getParamName())) {
+                                found = true;
 
-                        if(currentParam.getValue().size() > 1)
-                            writer.writeLine(currentParam.getParamName());
-                        else
-                            writer.writeLine(currentParam.getValue().getFirst());
+                                if (currentParam.getValue().size() > 1)
+                                    writer.writeLine(currentParam.getParamName());
+                                else
+                                    writer.writeLine(currentParam.getValue().getFirst());
+                            }
+                        }
                     }
+
+                    if(currentAssert.getVariations() != null) {
+                        for (Param currentVariation : currentAssert.getVariations()) {
+                            if ((currentAssert.getExpection() != null || currentAssert.getExpect() != null) && ctx.paramDeclaration(i).paramName.getText().equals(currentVariation.getParamName())) {
+                                found = true;
+
+                                writer.writeLine(currentVariation.getValue().get(repeat));
+                            }
+                        }
+
+                        if (!found)
+                            writer.writeLine(ctx.paramDeclaration(i).paramName.getText());
+                    }
+
+                    if (i != ctx.paramDeclaration().size() - 1)
+                        writer.writeLine(", ");
                 }
 
-                if (!found)
-                    writer.writeLine(ctx.paramDeclaration(i).paramName.getText());
-                if (i != ctx.paramDeclaration().size() - 1)
-                    writer.writeLine(", ");
+                dataCollectorVisitor.visitExpressionsIn(ctx);
+
+                boolean verify = handleMockVerification();
+
+                if (currentAssert.getExpection() != null && currentAssert.getExpectMessage() != null)
+                    writer.writeLine("));\n\t\tassertEquals(" + currentAssert.getExpectMessage() + ", exception.getMessage());\n\t}\n\n");
+                else if (verify) writer.writeLine(");\n\t}\n\n");
+                else writer.writeLine("));\n\t}\n\n");
+
+                dataCollectorVisitor.clearMethodState();
             }
-
-
-            dataCollectorVisitor.visitExpressionsIn(ctx);
-
-            boolean verify = handleMockVerification();
-
-            if (currentAssert.getExpection() != null && currentAssert.getExpectMessage() != null)
-                writer.writeLine("));\n\t\tassertEquals(" + currentAssert.getExpectMessage() + ", exception.getMessage());\n\t}\n\n");
-            else if(verify) writer.writeLine(");\n\t}\n\n");
-            else writer.writeLine("));\n\t}\n\n");
-
-            dataCollectorVisitor.clearMethodState();
         }
     }
 
@@ -159,13 +175,13 @@ public class MyJUnitTestVisitor extends JUnitGenBaseVisitor<Void> {
         writer.writeLine("import static org.mockito.Mockito.*;\n\n");
     }
 
-    private void writeBasicAssertion(Test currentTest, Assert currentAssert) {
-        switch(currentAssert.getExpect()) {
+    private void writeBasicAssertion(Test currentTest, Assert currentAssert, int repeat) {
+        switch(currentAssert.getExpect().get(repeat)) {
             case "true" -> writer.writeLine("\t\tassertTrue(");
             case "false" -> writer.writeLine("\t\tassertFalse(");
             case "null" -> writer.writeLine("\t\tassertNull(");
             case "notnull" -> writer.writeLine("\t\tassertNotNull(");
-            default -> writer.writeLine("\t\tassertEquals(" + currentAssert.getExpect() + ", ");
+            default -> writer.writeLine("\t\tassertEquals(" + currentAssert.getExpect().get(repeat) + ", ");
         }
         writer.writeLine(writer.lowercaseFirstLetter(dataCollectorVisitor.getClassName()) + "." + currentTest.getMethodName() + "(");
     }
