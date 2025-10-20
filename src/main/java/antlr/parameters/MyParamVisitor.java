@@ -197,6 +197,12 @@ public class MyParamVisitor extends ParamGenBaseVisitor<Void> {
 
         switch (ctx.getStart().getText()) {
             case "EXPECT":
+                if(!(ctx.getText().contains("[") || ctx.getText().contains("FOR"))) {
+                    ArrayList<String> expect = new ArrayList<>();
+
+                    expect.add(ctx.literal().getText());
+                    currentAssert.setExpect(expect);
+                }
                 break;
 
             case "EXPECT_EXCEPTION":
@@ -249,6 +255,13 @@ public class MyParamVisitor extends ParamGenBaseVisitor<Void> {
         currentAssert.setExpect(expect);
 
         return super.visitExpectInput(ctx);
+    }
+
+    @Override
+    public Void visitExpectArray(ParamGenParser.ExpectArrayContext ctx) {
+        currentAssert.setExceptionType(ctx.expectType.getText());
+
+        return super.visitExpectArray(ctx);
     }
 
     public ArrayList<Test> getAllTest() { return tests; }

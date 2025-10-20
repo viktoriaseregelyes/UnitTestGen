@@ -24,29 +24,43 @@ public class GeneratorController {
     String testCasesFileName;
 
     @PostMapping(value = "/generate-tests", consumes = "application/json")
-    public ResponseEntity<String> generateTests(@RequestBody TestRequest request) throws Exception {
+    public ResponseEntity<GeneratedResponse> generateTests(@RequestBody TestRequest request) throws Exception {
         clearWriter();
         String inputClass = request.inputClass;
         String testCases = request.testCases;
 
-        inputFileName = "src\\main\\java\\input\\uploads\\input_" + System.currentTimeMillis() + ".txt";
-        testCasesFileName = "src\\main\\java\\input\\uploads\\params_" + System.currentTimeMillis() + ".txt";
+        inputFileName = "src\\main\\java\\input\\uploads\\input\\input.txt";
+        testCasesFileName = "src\\main\\java\\input\\uploads\\params\\params.txt";
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(inputFileName, false))) { writer.write(""); }
+        catch (IOException e) { e.printStackTrace(); }
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(testCasesFileName, false))) { writer.write(""); }
+        catch (IOException e) { e.printStackTrace(); }
 
         try {
             Files.write(Paths.get(inputFileName), inputClass.getBytes());
             Files.write(Paths.get(testCasesFileName), testCases.getBytes());
 
-            generate(inputClass);
+            String className = generate(inputClass);
             String output = new String(Files.readAllBytes(Paths.get("TestClass.java")));
 
-            return ResponseEntity.ok(output);
+            double coverage = CloverRunner.runCloverPipeline(className);
+            System.out.println(coverage);
+
+            GeneratedResponse generatedResponse = new GeneratedResponse(output, coverage);
+
+            return ResponseEntity.ok(generatedResponse);
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            GeneratedResponse generatedResponse = new GeneratedResponse(e.getMessage(), 0);
+            return ResponseEntity.badRequest().body(generatedResponse);
         } catch (IOException e) {
+            GeneratedResponse generatedResponse = new GeneratedResponse("Failed to load input.", 0);
             e.printStackTrace();
-            return ResponseEntity.ofNullable("Failed to load input.");
+            return ResponseEntity.ofNullable(generatedResponse);
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body("Unexpected error " + e.getMessage());
+            GeneratedResponse generatedResponse = new GeneratedResponse("Unexpected error " + e.getMessage(), 0);
+            return ResponseEntity.internalServerError().body(generatedResponse);
         }
     }
 
@@ -88,7 +102,7 @@ public class GeneratorController {
         return ResponseEntity.ok(errors);
     }
 
-    public void generate(String inputClass) throws Exception {
+    public String generate(String inputClass) throws Exception {
         JavaParserProcessor jpp = new JavaParserProcessor(inputClass);
         jpp.parser();
 
@@ -99,6 +113,8 @@ public class GeneratorController {
 
         MyJUnitTestVisitor visitor = new MyJUnitTestVisitor(testCasesFileName);
         visitor.visit(tree);
+
+        return visitor.generateJavaClass();
     }
 
     private void clearWriter() {

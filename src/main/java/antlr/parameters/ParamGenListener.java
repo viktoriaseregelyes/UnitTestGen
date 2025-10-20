@@ -158,6 +158,16 @@ public interface ParamGenListener extends ParseTreeListener {
 	 */
 	void exitExpectation(ParamGenParser.ExpectationContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link ParamGenParser#expectArray}.
+	 * @param ctx the parse tree
+	 */
+	void enterExpectArray(ParamGenParser.ExpectArrayContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ParamGenParser#expectArray}.
+	 * @param ctx the parse tree
+	 */
+	void exitExpectArray(ParamGenParser.ExpectArrayContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link ParamGenParser#expectFor}.
 	 * @param ctx the parse tree
 	 */

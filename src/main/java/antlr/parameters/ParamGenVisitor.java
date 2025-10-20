@@ -101,6 +101,12 @@ public interface ParamGenVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitExpectation(ParamGenParser.ExpectationContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link ParamGenParser#expectArray}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExpectArray(ParamGenParser.ExpectArrayContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link ParamGenParser#expectFor}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

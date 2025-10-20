@@ -3,7 +3,11 @@
             <ul>
               <li><div class="sidebar" (click)="toggleSidebar()">☰</div></li>
               <li><a routerLink="/" class="navbar-brand">{{title}}</a></li>
-              <li style="float:right"><button class="theme-button" (click)="toggleTheme()"> {{ themeLabel }}</button></li>
+              <li style="float:right; margin-left: 10%"><button class="theme-button" (click)="toggleTheme()"> {{ themeLabel }}</button></li>
+              <li class="coverage-container"><div class="coverage-div">
+                <h3 class="coverage-text" *ngIf="coverage > 0">Coverage: {{ coverage }}%</h3>
+                <h3 class="coverage-text" *ngIf="coverage == 0">Coverage: -</h3>
+              </div></li>
             </ul>
       </nav>
   </div>

@@ -1650,6 +1650,24 @@ li {
   float: left;
 }
 
+.coverage-container {
+  float: none;
+  display: flex;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+.coverage-text {
+  color: white;
+}
+
+.coverage-div {
+  color: white;
+  background-color: #1d2633;
+  padding: 1px 10px;
+  border-radius: 0px 0px 20px 20px;
+}
+
 .theme-button {
   margin-top: 12px;
   margin-right: 12px;
@@ -2161,7 +2179,8 @@ a.bg-danger:focus {
 ul,
 ol {
   margin-top: 0;
-  margin-bottom: 10.5px
+  margin-bottom: 10.5px;
+  justify-content: space-between;
 }
 
 ul ul,

@@ -197,6 +197,18 @@ public class ParamGenBaseListener implements ParamGenListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterExpectArray(ParamGenParser.ExpectArrayContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitExpectArray(ParamGenParser.ExpectArrayContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterExpectFor(ParamGenParser.ExpectForContext ctx) { }
 	/**
 	 * {@inheritDoc}

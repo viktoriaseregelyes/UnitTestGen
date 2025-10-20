@@ -6,6 +6,7 @@ public class Assert {
     ArrayList<Param> params;
     ArrayList<Param> variations;
     ArrayList<String> expect;
+    String exceptionType;
     String expection;
     String expectMessage;
 
@@ -19,4 +20,6 @@ public class Assert {
     public void setExpection(String expection) { this.expection = expection; }
     public ArrayList<Param> getVariations() { return variations; }
     public void setVariations(ArrayList<Param> variations) { this.variations = variations; }
+    public String getExceptionType() { return exceptionType; }
+    public void setExceptionType(String exceptionType) { this.exceptionType = exceptionType; }
 }

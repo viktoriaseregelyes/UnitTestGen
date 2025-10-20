@@ -47,8 +47,10 @@ paramInput: 'VALUE' literal
     | 'VALUES' '[' literal (',' literal)* ']';
 
 expectation:
-    'EXPECT' (expectInput | literal | expectFor)
+    'EXPECT' (expectInput | literal | expectFor | expectArray)
     | 'EXPECT_EXCEPTION' ID ('(' exceptionMessage=STRING ')')?;
+
+expectArray: expectType = type expectInput;
 
 expectFor: 'FOR' INT 'TO' INT;
 

@@ -17,6 +17,7 @@ export class AppComponent {
   testCases: string = "TEST testName\nMETHOD name\nPARAM int a VALUE 10\nPARAM int b VALUE 0\nEXPECT 10"
   generatedTests: string = "Done";
   infoButton: string = 'CONSTRUCTOR\nPARAM int id VALUE 1\n\nMOCKING\nMOCK Service serviceMock\n\nTEST loginTest\nREPEAT 2\nMETHOD login\nPARAM string username VALUE "admin"\nVARIATION string password VALUES ["1234", "5678"]\nEXPECT true';
+  coverage: number = 0.0;
 
   isLoading = false;
   copySuccess = false;
@@ -93,7 +94,7 @@ export class AppComponent {
     this.isLoading = true;
 
     this.generatorService.generateTests(this.inputClass, this.testCases).subscribe({
-      next: (res) => { this.templateClass = res; this.isLoading = false;},
+      next: (res) => { this.templateClass = res.test; this.coverage = res.coverage; this.isLoading = false;},
       error: (err) => { this.showError = true; this.errorMessage = err?.error || 'Error sending input.'; this.isLoading = false; }
     });
   }

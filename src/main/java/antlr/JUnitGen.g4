@@ -64,6 +64,7 @@ expr
     | type expr?
     | expr methodDecl
     | '.' expr
+    | LCURLY (ID (',' ID)*)? RCURLY
     ;
 
 varDecl: type ID WILLBE expr;

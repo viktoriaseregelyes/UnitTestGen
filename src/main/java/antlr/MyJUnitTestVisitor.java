@@ -1,6 +1,10 @@
 package antlr;
 
 import antlr.parameters.*;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class MyJUnitTestVisitor extends JUnitGenBaseVisitor<Void> {
@@ -15,8 +19,23 @@ public class MyJUnitTestVisitor extends JUnitGenBaseVisitor<Void> {
     public MyJUnitTestVisitor(String testCasesFileName) {
         this.dataCollectorVisitor = new TestDataCollectorVisitor();
         this.inputManager = new TestInputManager(testCasesFileName, dataCollectorVisitor);
-        this.writer = new TestFileWriter("C:\\Users\\User\\Documents\\GitHub\\UnitTestGenerator\\UnitTest\\TestClass.java");
+        this.writer = new TestFileWriter("TestClass.java");
+
         writer.clear();
+    }
+
+    public String generateJavaClass() throws Exception {
+        String fileName = "src\\main\\java\\input\\uploads\\input\\" + this.dataCollectorVisitor.getClassName() + ".java";
+        String inputFileName = "src\\main\\java\\input\\uploads\\input\\input.txt";
+
+        try {
+            byte[] data = Files.readAllBytes(Paths.get(inputFileName));
+            Files.write(Paths.get(fileName), data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return this.dataCollectorVisitor.getClassName();
     }
 
     /**
@@ -87,8 +106,8 @@ public class MyJUnitTestVisitor extends JUnitGenBaseVisitor<Void> {
                             writer.writeLine("\t\t" + currentParam.getType() + " " + currentParam.getParamName() + " = " + currentParam.getValue() + ";\n");
 
             for (Assert currentAssert : currentTest.getAssertions()) {
-                if (currentAssert.getExpect().size() == 1) writeBasicAssertion(currentTest, currentAssert, 0);
-                if (currentAssert.getExpect().size() > 1) writeBasicAssertion(currentTest, currentAssert, repeat);
+                if (currentAssert.getExpect().size() == 1 || currentAssert.getExceptionType() != null) writeBasicAssertion(currentTest, currentAssert, 0);
+                if (currentAssert.getExpect().size() > 1 && currentAssert.getExceptionType() == null) writeBasicAssertion(currentTest, currentAssert, repeat);
                 else if (currentAssert.getExpection() != null) writeExceptionAssertion(currentTest, currentAssert);
 
                 for (int i = 0; i < ctx.paramDeclaration().size(); i++) {
@@ -115,12 +134,11 @@ public class MyJUnitTestVisitor extends JUnitGenBaseVisitor<Void> {
                                 writer.writeLine(currentVariation.getValue().get(repeat));
                             }
                         }
-
                         if (!found)
                             writer.writeLine(ctx.paramDeclaration(i).paramName.getText());
                     }
 
-                    if (i != ctx.paramDeclaration().size() - 1)
+                    if(i != ctx.paramDeclaration().size() - 1)
                         writer.writeLine(", ");
                 }
 
@@ -181,14 +199,30 @@ public class MyJUnitTestVisitor extends JUnitGenBaseVisitor<Void> {
             case "false" -> writer.writeLine("\t\tassertFalse(");
             case "null" -> writer.writeLine("\t\tassertNull(");
             case "notnull" -> writer.writeLine("\t\tassertNotNull(");
-            default -> writer.writeLine("\t\tassertEquals(" + currentAssert.getExpect().get(repeat) + ", ");
+            default -> {
+                if(currentAssert.getExceptionType() == null) { writer.writeLine("\t\tassertEquals("); }
+            }
         }
+
+        if(currentAssert.getExceptionType() != null) {
+            writer.writeLine("\t\tassertArrayEquals(new " + currentAssert.getExceptionType() + "{");
+            for(int i = 0; i < currentAssert.getExpect().size(); i++) {
+                writer.writeLine(currentAssert.getExpect().get(i));
+                if (i != currentAssert.getExpect().size() - 1)
+                    writer.writeLine(", ");
+                else
+                    writer.writeLine("}, ");
+            }
+        }
+        else
+            writer.writeLine(currentAssert.getExpect().get(repeat) + ", ");
+
         writer.writeLine(writer.lowercaseFirstLetter(dataCollectorVisitor.getClassName()) + "." + currentTest.getMethodName() + "(");
     }
 
-    private void writeExceptionAssertion(Test test, Assert assertion) {
-        writer.writeLine("\t\tException exception = assertThrows(" + assertion.getExpection() + ".class, () -> "
-                + writer.lowercaseFirstLetter(dataCollectorVisitor.getClassName()) + "." + test.getMethodName() + "(");
+    private void writeExceptionAssertion(Test currentTest, Assert currentAssert) {
+        writer.writeLine("\t\tException exception = assertThrows(" + currentAssert.getExpection() + ".class, () -> "
+                + writer.lowercaseFirstLetter(dataCollectorVisitor.getClassName()) + "." + currentTest.getMethodName() + "(");
     }
 
     /**

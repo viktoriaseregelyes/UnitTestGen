@@ -9,6 +9,12 @@ export interface ValidationError {
   length: number;
 }
 
+// TODO ezt kellene a generate testbe berakni az observablebe és akkor úgy kellene visszaadni backendről a dolgokat, hogy bennevcan a coverage is
+export interface Generated {
+  test: string;
+  coverage: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -18,10 +24,10 @@ export class TestGeneratorService {
 
   constructor(private http: HttpClient) {}
 
-  generateTests(inputClass: string, testCases: string): Observable<string> {
+  generateTests(inputClass: string, testCases: string): Observable<Generated> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const body = { inputClass, testCases };
-    return this.http.post(this.baseUrl + '/generate-tests', body, { headers, responseType: 'text' });
+    return this.http.post<Generated>(this.baseUrl + '/generate-tests', body, { headers });
   }
 
   validate(testCases: string): Observable<ValidationError[]> {
