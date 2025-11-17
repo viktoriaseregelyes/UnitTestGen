@@ -95,8 +95,10 @@ export class AppComponent {
 
     this.generatorService.generateTests(this.inputClass, this.testCases).subscribe({
       next: (res) => { this.templateClass = res.test; this.coverage = res.coverage; this.isLoading = false;},
-      error: (err) => { this.showError = true; this.errorMessage = err?.error || 'Error sending input.'; this.isLoading = false; }
+      error: (err) => { this.showError = true; this.errorMessage = err?.error.test || 'Error sending input.'; this.isLoading = false; }
     });
+
+    
   }
 
   copyEditorContent(): void {

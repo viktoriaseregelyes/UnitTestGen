@@ -45,7 +45,7 @@ public class GeneratorController {
             String className = generate(inputClass);
             String output = new String(Files.readAllBytes(Paths.get("TestClass.java")));
 
-            double coverage = CloverRunner.runCloverPipeline(className);
+            double coverage =  Math.round(CloverRunner.runCloverPipeline(className) * 100.0) / 100.0;
             System.out.println(coverage);
 
             GeneratedResponse generatedResponse = new GeneratedResponse(output, coverage);

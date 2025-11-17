@@ -13,7 +13,7 @@ classBodyElement:
     | methodDeclaration
     | constructorDeclaration;
 
-field: 'FIELD' fieldType=type fieldName=ID;
+field: 'FIELD' fieldType=type fieldName=ID (WILLBE expr)?;
 
 constructorDeclaration:
     'CONSTRUCTOR' constructorName=ID
