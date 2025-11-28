@@ -46,7 +46,7 @@ export class AppComponent {
   onTestEditorInit(editor: any): void {
     this.testEditorInstance = editor;
 
-    /*editor.onDidChangeModelContent(() => {
+    editor.onDidChangeModelContent(() => {
       console.log('Editor changed');
       console.log(this.testEditorInstance.getValue());
 
@@ -54,7 +54,7 @@ export class AppComponent {
         next: (errors) => this.applyValidationMarkers(errors),
         error: (err) => console.error('Validation error:', err)
       });
-    });*/
+    });
   }
 
   constructor(private generatorService: TestGeneratorService) {}
