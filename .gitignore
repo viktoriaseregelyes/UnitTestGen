@@ -37,6 +37,7 @@ build/
 ### Mac OS ###
 .DS_Store
 /src/main/java/input/uploads/
+/plans
 
 **/out
 **/tmp
@@ -44,3 +45,4 @@ build/
 **/report
 
 /.idea
+/frontend/src/assets
