@@ -48,3 +48,5 @@ build/
 /frontend/src/assets
 
 TestClass.java
+src/main/java/input/uploads/input
+src/main/java/input/generate
