@@ -175,7 +175,7 @@ public class MyParamVisitor extends ParamGenBaseVisitor<Void> {
                 break;
 
             default:
-                errorHandler.throwError("missing value declaration");
+                break;
         }
 
         currentParam.setValue(values);

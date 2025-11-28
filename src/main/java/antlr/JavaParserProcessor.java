@@ -67,7 +67,13 @@ public class JavaParserProcessor {
                 case ThrowStmt throwStmt -> writeLineToFile("EXCEPTION " + stmt + "\n");
                 case IfStmt ifStmt -> {
                     writeLineToFile("IF_CONDITION " + ifStmt.getCondition() + "\n");
-                    processStatements(ifStmt.getThenStmt().asBlockStmt().getStatements());
+                    Statement thenStmt = ifStmt.getThenStmt();
+                    if (thenStmt.isBlockStmt()) {
+                        processStatements(thenStmt.asBlockStmt().getStatements());
+                    } else if (thenStmt.isReturnStmt()) {
+                        ReturnStmt rs = thenStmt.asReturnStmt();
+                        writeLineToFile("RETURN " + rs.getExpression().map(Object::toString).orElse("null") + "\n");
+                    }
                     ifStmt.getElseStmt().ifPresent(elseStmt -> {
                         writeLineToFile("ELSE_BLOCK_FOUND\n");
                         processStatements(((BlockStmt) elseStmt).getStatements());

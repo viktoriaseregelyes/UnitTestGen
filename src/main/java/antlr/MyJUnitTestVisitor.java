@@ -102,12 +102,18 @@ public class MyJUnitTestVisitor extends JUnitGenBaseVisitor<Void> {
             for (Assert currentAssert : currentTest.getAssertions())
                 if(currentAssert.getParams() != null)
                     for (Param currentParam : currentAssert.getParams())
-                        if ((currentAssert.getExpection() != null || currentAssert.getExpect() != null) && currentParam.getValue().size() > 1)
-                            writer.writeLine("\t\t" + currentParam.getType() + " " + currentParam.getParamName() + " = " + currentParam.getValue() + ";\n");
+                        if ((currentAssert.getExpection() != null || currentAssert.getExpect() != null) && currentParam.getValue().size() > 1) {
+                            writer.writeLine("\t\t" + currentParam.getType() + " " + currentParam.getParamName() + " = new " + currentParam.getType() + " {");
+                            for(int i = 0; i < currentParam.getValue().size(); i++) {
+                                writer.writeLine(currentParam.getValue().get(i));
+                                if (i != currentParam.getValue().size() - 1) writer.writeLine(", ");
+                                else writer.writeLine("};\n");
+                            }
+                        }
 
             for (Assert currentAssert : currentTest.getAssertions()) {
-                if (currentAssert.getExpect().size() == 1 || currentAssert.getExceptionType() != null) writeBasicAssertion(currentTest, currentAssert, 0);
-                if (currentAssert.getExpect().size() > 1 && currentAssert.getExceptionType() == null) writeBasicAssertion(currentTest, currentAssert, repeat);
+                if ((currentAssert.getExpect() != null && currentAssert.getExpect().size() == 1) || currentAssert.getExceptionType() != null) writeBasicAssertion(currentTest, currentAssert, 0);
+                if ((currentAssert.getExpect() != null && currentAssert.getExpect().size() > 1) && currentAssert.getExceptionType() == null) writeBasicAssertion(currentTest, currentAssert, repeat);
                 else if (currentAssert.getExpection() != null) writeExceptionAssertion(currentTest, currentAssert);
 
                 for (int i = 0; i < ctx.paramDeclaration().size(); i++) {
@@ -118,10 +124,8 @@ public class MyJUnitTestVisitor extends JUnitGenBaseVisitor<Void> {
                             if ((currentAssert.getExpection() != null || currentAssert.getExpect() != null) && ctx.paramDeclaration(i).paramName.getText().equals(currentParam.getParamName())) {
                                 found = true;
 
-                                if (currentParam.getValue().size() > 1)
-                                    writer.writeLine(currentParam.getParamName());
-                                else
-                                    writer.writeLine(currentParam.getValue().getFirst());
+                                if (currentParam.getValue().size() > 1) writer.writeLine(currentParam.getParamName());
+                                else writer.writeLine(currentParam.getValue().getFirst());
                             }
                         }
                     }
@@ -134,22 +138,25 @@ public class MyJUnitTestVisitor extends JUnitGenBaseVisitor<Void> {
                                 writer.writeLine(currentVariation.getValue().get(repeat));
                             }
                         }
-                        if (!found)
-                            writer.writeLine(ctx.paramDeclaration(i).paramName.getText());
                     }
+
+                    if (!found)
+                        writer.writeLine(ctx.paramDeclaration(i).paramName.getText());
 
                     if(i != ctx.paramDeclaration().size() - 1)
                         writer.writeLine(", ");
                 }
+
+                writer.writeLine("));\n");
 
                 dataCollectorVisitor.visitExpressionsIn(ctx);
 
                 boolean verify = handleMockVerification();
 
                 if (currentAssert.getExpection() != null && currentAssert.getExpectMessage() != null)
-                    writer.writeLine("));\n\t\tassertEquals(" + currentAssert.getExpectMessage() + ", exception.getMessage());\n\t}\n\n");
-                else if (verify) writer.writeLine(");\n\t}\n\n");
-                else writer.writeLine("));\n\t}\n\n");
+                    writer.writeLine("\t\tassertEquals(" + currentAssert.getExpectMessage() + ", exception.getMessage());\n\t}\n\n");
+                else if (verify) writer.writeLine("\n\t}\n\n");
+                else writer.writeLine("\t}\n\n");
 
                 dataCollectorVisitor.clearMethodState();
             }
@@ -174,13 +181,17 @@ public class MyJUnitTestVisitor extends JUnitGenBaseVisitor<Void> {
     }
 
     private void verifyMethodParams(ArrayList<String> mockMethodParams) {
-        if (mockMethodParams == null || mockMethodParams.isEmpty()) return;
+        if (mockMethodParams == null || mockMethodParams.isEmpty()) {
+            writer.writeLine("();");
+            return;
+        }
         writer.writeLine("(");
         for (String param : mockMethodParams) {
             Optional<Param> found = dataCollectorVisitor.getMethodParams().stream().filter(p -> p.getParamName().equals(param)).findFirst();
             writer.writeLine(found.map(p -> "any(" + p.getType() + ".class)").orElse(param));
             if (!param.equals(mockMethodParams.getLast())) writer.writeLine(", ");
         }
+        writer.writeLine(");");
     }
 
     private void basicImports() {
@@ -214,7 +225,7 @@ public class MyJUnitTestVisitor extends JUnitGenBaseVisitor<Void> {
                     writer.writeLine("}, ");
             }
         }
-        else
+        if(!(currentAssert.getExpect().get(repeat).equals("true") || currentAssert.getExpect().get(repeat).equals("false")) || currentAssert.getExpect().get(repeat).equals("null") || currentAssert.getExpect().get(repeat).equals("notnull"))
             writer.writeLine(currentAssert.getExpect().get(repeat) + ", ");
 
         writer.writeLine(writer.lowercaseFirstLetter(dataCollectorVisitor.getClassName()) + "." + currentTest.getMethodName() + "(");
@@ -267,6 +278,17 @@ public class MyJUnitTestVisitor extends JUnitGenBaseVisitor<Void> {
             else writer.writeLine("\t\tthis." + mockFunctionParam.getParamName() + " = mock(" + mockFunctionParam.getType() + ".class);\n");
         }
 
+        if(!inputManager.getGlobalWhens().isEmpty())
+            for (WhenRule whens : inputManager.getGlobalWhens()) {
+                writer.writeLine("\t\twhen(" + whens.getCondition() + ")");
+                if (!whens.getReturnValue().equals("NaN"))
+                    writer.writeLine(".thenReturn(" + whens.getReturnValue() + ")");
+                if (!whens.getThrowValue().equals("NaN"))
+                    writer.writeLine(".thenThrow(" + whens.getThrowValue() + ")");
+
+                writer.writeLine(";\n");
+            }
+
         writer.writeLine("\t\tthis." + writer.lowercaseFirstLetter(dataCollectorVisitor.getClassName()) + " = new " + dataCollectorVisitor.getClassName() + "(");
         if(!dataCollectorVisitor.getMockConstructors().isEmpty() && inputManager.getInputConstructor() != null) {
             for(Constructor currentConstructor : dataCollectorVisitor.getMockConstructors()) {
@@ -280,20 +302,7 @@ public class MyJUnitTestVisitor extends JUnitGenBaseVisitor<Void> {
             useConstructor();
         }
 
-        writer.writeLine(");\n");
-
-        if(!inputManager.getGlobalWhens().isEmpty())
-            for (WhenRule whens : inputManager.getGlobalWhens()) {
-                writer.writeLine("\t\twhen(" + whens.getCondition() + ")");
-                if (!whens.getReturnValue().equals("NaN"))
-                    writer.writeLine(".thenReturn(" + whens.getReturnValue() + ")");
-                if (!whens.getThrowValue().equals("NaN"))
-                    writer.writeLine(".thenThrow(" + whens.getThrowValue() + ")");
-
-                writer.writeLine(";\n");
-            }
-
-        writer.writeLine("\t}\n\n");
+        writer.writeLine(");\n\t}\n\n");
     }
 
     /**

@@ -43,3 +43,4 @@ build/
 **/src/instrumented
 **/report
 
+/.idea

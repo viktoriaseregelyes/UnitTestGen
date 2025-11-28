@@ -27,7 +27,7 @@ variationSpec: 'VARIATION' varType=type varName=ID 'VALUES' (varInput | varFor);
 
 varFor: 'FOR' INT 'TO' INT;
 
-varInput: '[' literal (',' literal)* ']';
+varInput: LANGLE literal (',' literal)* RANGLE;
 
 whenSpec:
     'WHEN' conditionExpr (('RETURNS' returnVal=literal ('THROW' throwVal)?) | ('THROW' throwVal));
@@ -38,23 +38,30 @@ throwVal:
 mockSpec:
     'MOCK' ID ID;
 
-conditionExpr: ID (LPAREN ID? (',' ID)* RPAREN)?;
+conditionExpr: | ID
+    | LPAREN conditionExpr RPAREN
+    | NOT conditionExpr
+    | type conditionExpr?
+    | '.' conditionExpr
+    | LCURLY (ID (',' ID)*)? RCURLY
+    | literal
+    ;
 
 paramSpec:
-    'PARAM' paramType=type paramName=ID paramInput;
+    'PARAM' paramType=type (paramName=ID paramInput)?;
 
 paramInput: 'VALUE' literal
-    | 'VALUES' '[' literal (',' literal)* ']';
+    | 'VALUES' LANGLE literal (',' literal)* RANGLE;
 
 expectation:
     'EXPECT' (expectInput | literal | expectFor | expectArray)
-    | 'EXPECT_EXCEPTION' ID ('(' exceptionMessage=STRING ')')?;
+    | 'EXPECT_EXCEPTION' ID (LPAREN exceptionMessage=STRING RPAREN)?;
 
 expectArray: expectType = type expectInput;
 
 expectFor: 'FOR' INT 'TO' INT;
 
-expectInput: '[' literal (',' literal)* ']';
+expectInput: LANGLE literal (',' literal)* RANGLE;
 
 type: 'int'
     | 'float'
@@ -63,6 +70,7 @@ type: 'int'
     | 'boolean'
     | 'string'
     | 'enum'
+    | 'byte'
     | 'List<' type '>'
     | 'Optional<' type '>'
     | 'Map<' type '>'
@@ -76,10 +84,15 @@ literal: INT
     | STRING
     | CHAR
     | NOTNULL
-    | NULL;
+    | NULL
+    | BYTE
+    | LPAREN type RPAREN literal
+    | ID;
 
 LANGLE: '[';
 RANGLE: ']';
+LCURLY: '{';
+RCURLY: '}';
 LPAREN: '(';
 RPAREN: ')';
 BOOLEAN: 'true' | 'false';
@@ -91,5 +104,6 @@ INT: ('-')?[0-9]+;
 FLOAT: ('-')?[0-9]+ '.' [0-9]+;
 STRING: '"' (~["\r\n])* '"';
 CHAR: '\'' . '\'';
+BYTE: '0x'[A-Z0-9]*;
 
 WS: [ \t\r\n]+ -> skip;

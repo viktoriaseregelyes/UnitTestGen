@@ -33,7 +33,7 @@ public interface JUnitGenVisitor<T> extends ParseTreeVisitor<T> {
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitClassDeclaration(JUnitGenParser.ClassDeclarationContext ctx) ;
+	T visitClassDeclaration(JUnitGenParser.ClassDeclarationContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link JUnitGenParser#classBodyElement}.
 	 * @param ctx the parse tree
