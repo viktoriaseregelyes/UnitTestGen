@@ -41,6 +41,7 @@ jobs:
 
   deploy:
     name: Deploy to Render
+    needs: [build]
     runs-on: ubuntu-latest
 
     steps:
