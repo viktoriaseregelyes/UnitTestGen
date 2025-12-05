@@ -99,17 +99,23 @@ public class MyJUnitTestVisitor extends JUnitGenBaseVisitor<Void> {
                 }
             }
 
-            for (Assert currentAssert : currentTest.getAssertions())
-                if(currentAssert.getParams() != null)
+            for (Assert currentAssert : currentTest.getAssertions()) {
+                if (currentAssert.getParams() != null)
                     for (Param currentParam : currentAssert.getParams())
                         if ((currentAssert.getExpection() != null || currentAssert.getExpect() != null) && currentParam.getValue().size() > 1) {
                             writer.writeLine("\t\t" + currentParam.getType() + " " + currentParam.getParamName() + " = new " + currentParam.getType() + " {");
-                            for(int i = 0; i < currentParam.getValue().size(); i++) {
+                            for (int i = 0; i < currentParam.getValue().size(); i++) {
                                 writer.writeLine(currentParam.getValue().get(i));
                                 if (i != currentParam.getValue().size() - 1) writer.writeLine(", ");
                                 else writer.writeLine("};\n");
                             }
                         }
+
+                if(currentAssert.getVariations() != null)
+                    for (Param currentVariation : currentAssert.getVariations())
+                        if ((currentAssert.getExpection() != null || currentAssert.getExpect() != null) && currentVariation.getValue().get(repeat).startsWith("{"))
+                            writer.writeLine("\t\t" + currentVariation.getType() + " " + currentVariation.getParamName() + " = new " + currentVariation.getType() + " " + currentVariation.getValue().get(repeat) + ";\n");
+            }
 
             for (Assert currentAssert : currentTest.getAssertions()) {
                 if ((currentAssert.getExpect() != null && currentAssert.getExpect().size() == 1) || currentAssert.getExceptionType() != null) writeBasicAssertion(currentTest, currentAssert, 0);
@@ -135,7 +141,8 @@ public class MyJUnitTestVisitor extends JUnitGenBaseVisitor<Void> {
                             if ((currentAssert.getExpection() != null || currentAssert.getExpect() != null) && ctx.paramDeclaration(i).paramName.getText().equals(currentVariation.getParamName())) {
                                 found = true;
 
-                                writer.writeLine(currentVariation.getValue().get(repeat));
+                                if(currentVariation.getValue().get(repeat).startsWith("{")) writer.writeLine(currentVariation.getParamName());
+                                else writer.writeLine(currentVariation.getValue().get(repeat));
                             }
                         }
                     }

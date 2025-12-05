@@ -86,6 +86,7 @@ literal: INT
     | NOTNULL
     | NULL
     | BYTE
+    | LCURLY (literal (',' literal)*)? RCURLY
     | LPAREN type RPAREN literal
     | ID;
 

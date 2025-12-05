@@ -1745,14 +1745,19 @@ public class ParamGenParser extends Parser {
 		public TerminalNode NOTNULL() { return getToken(ParamGenParser.NOTNULL, 0); }
 		public TerminalNode NULL() { return getToken(ParamGenParser.NULL, 0); }
 		public TerminalNode BYTE() { return getToken(ParamGenParser.BYTE, 0); }
+		public TerminalNode LCURLY() { return getToken(ParamGenParser.LCURLY, 0); }
+		public TerminalNode RCURLY() { return getToken(ParamGenParser.RCURLY, 0); }
+		public List<LiteralContext> literal() {
+			return getRuleContexts(LiteralContext.class);
+		}
+		public LiteralContext literal(int i) {
+			return getRuleContext(LiteralContext.class,i);
+		}
 		public TerminalNode LPAREN() { return getToken(ParamGenParser.LPAREN, 0); }
 		public TypeContext type() {
 			return getRuleContext(TypeContext.class,0);
 		}
 		public TerminalNode RPAREN() { return getToken(ParamGenParser.RPAREN, 0); }
-		public LiteralContext literal() {
-			return getRuleContext(LiteralContext.class,0);
-		}
 		public TerminalNode ID() { return getToken(ParamGenParser.ID, 0); }
 		public LiteralContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1776,8 +1781,9 @@ public class ParamGenParser extends Parser {
 	public final LiteralContext literal() throws RecognitionException {
 		LiteralContext _localctx = new LiteralContext(_ctx, getState());
 		enterRule(_localctx, 38, RULE_literal);
+		int _la;
 		try {
-			setState(283);
+			setState(295);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case INT:
@@ -1836,23 +1842,58 @@ public class ParamGenParser extends Parser {
 				match(BYTE);
 				}
 				break;
-			case LPAREN:
+			case LCURLY:
 				enterOuterAlt(_localctx, 9);
 				{
 				setState(277);
+				match(LCURLY);
+				setState(286);
+				_errHandler.sync(this);
+				_la = _input.LA(1);
+				if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 1116347899576320L) != 0)) {
+					{
+					setState(278);
+					literal();
+					setState(283);
+					_errHandler.sync(this);
+					_la = _input.LA(1);
+					while (_la==T__10) {
+						{
+						{
+						setState(279);
+						match(T__10);
+						setState(280);
+						literal();
+						}
+						}
+						setState(285);
+						_errHandler.sync(this);
+						_la = _input.LA(1);
+					}
+					}
+				}
+
+				setState(288);
+				match(RCURLY);
+				}
+				break;
+			case LPAREN:
+				enterOuterAlt(_localctx, 10);
+				{
+				setState(289);
 				match(LPAREN);
-				setState(278);
+				setState(290);
 				type(0);
-				setState(279);
+				setState(291);
 				match(RPAREN);
-				setState(280);
+				setState(292);
 				literal();
 				}
 				break;
 			case ID:
-				enterOuterAlt(_localctx, 10);
+				enterOuterAlt(_localctx, 11);
 				{
-				setState(282);
+				setState(294);
 				match(ID);
 				}
 				break;
@@ -1887,7 +1928,7 @@ public class ParamGenParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\u0004\u00012\u011e\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
+		"\u0004\u00012\u012a\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
 		"\u0002\u0007\u0002\u0002\u0003\u0007\u0003\u0002\u0004\u0007\u0004\u0002"+
 		"\u0005\u0007\u0005\u0002\u0006\u0007\u0006\u0002\u0007\u0007\u0007\u0002"+
 		"\b\u0007\b\u0002\t\u0007\t\u0002\n\u0007\n\u0002\u000b\u0007\u000b\u0002"+
@@ -1930,9 +1971,11 @@ public class ParamGenParser extends Parser {
 		"\u0012\u0001\u0012\u0005\u0012\u0109\b\u0012\n\u0012\f\u0012\u010c\t\u0012"+
 		"\u0001\u0013\u0001\u0013\u0001\u0013\u0001\u0013\u0001\u0013\u0001\u0013"+
 		"\u0001\u0013\u0001\u0013\u0001\u0013\u0001\u0013\u0001\u0013\u0001\u0013"+
-		"\u0001\u0013\u0001\u0013\u0003\u0013\u011c\b\u0013\u0001\u0013\u0000\u0001"+
-		"$\u0014\u0000\u0002\u0004\u0006\b\n\f\u000e\u0010\u0012\u0014\u0016\u0018"+
-		"\u001a\u001c\u001e \"$&\u0000\u0000\u0143\u0000)\u0001\u0000\u0000\u0000"+
+		"\u0005\u0013\u011a\b\u0013\n\u0013\f\u0013\u011d\t\u0013\u0003\u0013\u011f"+
+		"\b\u0013\u0001\u0013\u0001\u0013\u0001\u0013\u0001\u0013\u0001\u0013\u0001"+
+		"\u0013\u0001\u0013\u0003\u0013\u0128\b\u0013\u0001\u0013\u0000\u0001$"+
+		"\u0014\u0000\u0002\u0004\u0006\b\n\f\u000e\u0010\u0012\u0014\u0016\u0018"+
+		"\u001a\u001c\u001e \"$&\u0000\u0000\u0152\u0000)\u0001\u0000\u0000\u0000"+
 		"\u00027\u0001\u0000\u0000\u0000\u0004=\u0001\u0000\u0000\u0000\u0006C"+
 		"\u0001\u0000\u0000\u0000\bI\u0001\u0000\u0000\u0000\nf\u0001\u0000\u0000"+
 		"\u0000\fn\u0001\u0000\u0000\u0000\u000es\u0001\u0000\u0000\u0000\u0010"+
@@ -1941,7 +1984,7 @@ public class ParamGenParser extends Parser {
 		"\u0001\u0000\u0000\u0000\u001a\u00c4\u0001\u0000\u0000\u0000\u001c\u00d4"+
 		"\u0001\u0000\u0000\u0000\u001e\u00d6\u0001\u0000\u0000\u0000 \u00d9\u0001"+
 		"\u0000\u0000\u0000\"\u00de\u0001\u0000\u0000\u0000$\u0103\u0001\u0000"+
-		"\u0000\u0000&\u011b\u0001\u0000\u0000\u0000(*\u0003\u0002\u0001\u0000"+
+		"\u0000\u0000&\u0127\u0001\u0000\u0000\u0000(*\u0003\u0002\u0001\u0000"+
 		")(\u0001\u0000\u0000\u0000)*\u0001\u0000\u0000\u0000*,\u0001\u0000\u0000"+
 		"\u0000+-\u0003\u0004\u0002\u0000,+\u0001\u0000\u0000\u0000,-\u0001\u0000"+
 		"\u0000\u0000-/\u0001\u0000\u0000\u0000.0\u0003\u0006\u0003\u0000/.\u0001"+
@@ -2062,20 +2105,27 @@ public class ParamGenParser extends Parser {
 		"\u0108\u0105\u0001\u0000\u0000\u0000\u0109\u010c\u0001\u0000\u0000\u0000"+
 		"\u010a\u0108\u0001\u0000\u0000\u0000\u010a\u010b\u0001\u0000\u0000\u0000"+
 		"\u010b%\u0001\u0000\u0000\u0000\u010c\u010a\u0001\u0000\u0000\u0000\u010d"+
-		"\u011c\u0005-\u0000\u0000\u010e\u011c\u0005.\u0000\u0000\u010f\u011c\u0005"+
-		"(\u0000\u0000\u0110\u011c\u0005/\u0000\u0000\u0111\u011c\u00050\u0000"+
-		"\u0000\u0112\u011c\u0005)\u0000\u0000\u0113\u011c\u0005*\u0000\u0000\u0114"+
-		"\u011c\u00051\u0000\u0000\u0115\u0116\u0005&\u0000\u0000\u0116\u0117\u0003"+
-		"$\u0012\u0000\u0117\u0118\u0005\'\u0000\u0000\u0118\u0119\u0003&\u0013"+
-		"\u0000\u0119\u011c\u0001\u0000\u0000\u0000\u011a\u011c\u0005,\u0000\u0000"+
-		"\u011b\u010d\u0001\u0000\u0000\u0000\u011b\u010e\u0001\u0000\u0000\u0000"+
-		"\u011b\u010f\u0001\u0000\u0000\u0000\u011b\u0110\u0001\u0000\u0000\u0000"+
-		"\u011b\u0111\u0001\u0000\u0000\u0000\u011b\u0112\u0001\u0000\u0000\u0000"+
-		"\u011b\u0113\u0001\u0000\u0000\u0000\u011b\u0114\u0001\u0000\u0000\u0000"+
-		"\u011b\u0115\u0001\u0000\u0000\u0000\u011b\u011a\u0001\u0000\u0000\u0000"+
-		"\u011c\'\u0001\u0000\u0000\u0000\u001f),/4;AGMTZ`dly\u0084\u0088\u008d"+
-		"\u009d\u00a7\u00aa\u00ae\u00b4\u00bf\u00c4\u00cb\u00d2\u00d4\u00e4\u0103"+
-		"\u010a\u011b";
+		"\u0128\u0005-\u0000\u0000\u010e\u0128\u0005.\u0000\u0000\u010f\u0128\u0005"+
+		"(\u0000\u0000\u0110\u0128\u0005/\u0000\u0000\u0111\u0128\u00050\u0000"+
+		"\u0000\u0112\u0128\u0005)\u0000\u0000\u0113\u0128\u0005*\u0000\u0000\u0114"+
+		"\u0128\u00051\u0000\u0000\u0115\u011e\u0005$\u0000\u0000\u0116\u011b\u0003"+
+		"&\u0013\u0000\u0117\u0118\u0005\u000b\u0000\u0000\u0118\u011a\u0003&\u0013"+
+		"\u0000\u0119\u0117\u0001\u0000\u0000\u0000\u011a\u011d\u0001\u0000\u0000"+
+		"\u0000\u011b\u0119\u0001\u0000\u0000\u0000\u011b\u011c\u0001\u0000\u0000"+
+		"\u0000\u011c\u011f\u0001\u0000\u0000\u0000\u011d\u011b\u0001\u0000\u0000"+
+		"\u0000\u011e\u0116\u0001\u0000\u0000\u0000\u011e\u011f\u0001\u0000\u0000"+
+		"\u0000\u011f\u0120\u0001\u0000\u0000\u0000\u0120\u0128\u0005%\u0000\u0000"+
+		"\u0121\u0122\u0005&\u0000\u0000\u0122\u0123\u0003$\u0012\u0000\u0123\u0124"+
+		"\u0005\'\u0000\u0000\u0124\u0125\u0003&\u0013\u0000\u0125\u0128\u0001"+
+		"\u0000\u0000\u0000\u0126\u0128\u0005,\u0000\u0000\u0127\u010d\u0001\u0000"+
+		"\u0000\u0000\u0127\u010e\u0001\u0000\u0000\u0000\u0127\u010f\u0001\u0000"+
+		"\u0000\u0000\u0127\u0110\u0001\u0000\u0000\u0000\u0127\u0111\u0001\u0000"+
+		"\u0000\u0000\u0127\u0112\u0001\u0000\u0000\u0000\u0127\u0113\u0001\u0000"+
+		"\u0000\u0000\u0127\u0114\u0001\u0000\u0000\u0000\u0127\u0115\u0001\u0000"+
+		"\u0000\u0000\u0127\u0121\u0001\u0000\u0000\u0000\u0127\u0126\u0001\u0000"+
+		"\u0000\u0000\u0128\'\u0001\u0000\u0000\u0000!),/4;AGMTZ`dly\u0084\u0088"+
+		"\u008d\u009d\u00a7\u00aa\u00ae\u00b4\u00bf\u00c4\u00cb\u00d2\u00d4\u00e4"+
+		"\u0103\u010a\u011b\u011e\u0127";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {
