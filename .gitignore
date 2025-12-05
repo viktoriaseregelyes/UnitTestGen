@@ -50,3 +50,4 @@ build/
 TestClass.java
 src/main/java/input/uploads/input
 src/main/java/input/generate
+/.github/workflows
