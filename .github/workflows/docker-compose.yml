@@ -3,7 +3,7 @@ version: '3.8'
 services:
   app:
     image: viku243/unittestgen:latest
-    container_name: app
+    container_name: language2tests
     build:
       context: .
       dockerfile: ./Dockerfile

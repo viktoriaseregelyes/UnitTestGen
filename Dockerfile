@@ -2,13 +2,13 @@
 # 1. Build Angular frontend
 #############################
 FROM node:20 AS frontend-build
+WORKDIR /app
+
+COPY ../frontend ./frontend
+
 WORKDIR /app/frontend
-
-COPY frontend/package*.json ./
-
-RUN npm ci
-COPY frontend/ ./
-RUN npx ng build --configuration production
+RUN npm install
+RUN npm run build
 
 #############################
 # 2. Build Spring Boot backend
@@ -16,11 +16,10 @@ RUN npx ng build --configuration production
 FROM maven:3.9.6-eclipse-temurin-21 AS backend-build
 WORKDIR /app
 
-COPY pom.xml .
-COPY src ./src
-COPY --from=frontend-build /app/frontend/dist/frontend/. ./src/main/resources/static/
+COPY . .
+COPY --from=frontend-build /app/frontend/dist/frontend/browser/ ./src/main/resources/static/
 
-RUN mvn -B -DskipTests package
+RUN mvn -f pom.xml clean package -DskipTests
 
 #############################
 # 3. Runtime image
