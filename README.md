@@ -19,6 +19,7 @@ Automatic unit-test generator using ANTLR-based AST parsing + Spring Boot & Angu
 - Exposes REST API (via Spring Boot) for integration
 
 🚀 Getting started
+
 To get started, it is best to have the latest JDK and Maven installed. For the frontend, you should download the latest Node.js + npm.
 
 Run backend
