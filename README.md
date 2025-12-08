@@ -4,13 +4,13 @@
 
 Automatic unit-test generator using ANTLR-based AST parsing + Spring Boot & Angular.
 
-🛠 Tech stack
+## 🛠 Tech stack
 - Backend: Java Spring Boot
 - Frontend: Angular
 - Parsing / AST: ANTLR
 - Testing framework for generated tests: JUnit, Mockito for mocks
 
-✨ Features
+## ✨ Features
 - Parses Java source code into AST via JavaParser
 - Accepts a test-specification (test cases defined by the user)
 - Automatically generates corresponding unit tests
@@ -18,7 +18,7 @@ Automatic unit-test generator using ANTLR-based AST parsing + Spring Boot & Angu
 - Provides a web UI (via Angular) to upload class + specification and fetch generated tests
 - Exposes REST API (via Spring Boot) for integration
 
-🚀 Getting started
+## 🚀 Getting started
 
 To get started, it is best to have the latest JDK and Maven installed. For the frontend, you should download the latest Node.js + npm.
 
@@ -36,7 +36,7 @@ ng serve
 
 Visit http://localhost:4200/ to open the web UI.
 
-🧪 Usage
+## 🧪 Usage
 - In the UI or via REST API upload your Java class source file.
 - Provide a test-specification describing test cases (inputs, expected outputs, mocks if needed).
 - Trigger test generation — the tool will output a .java test file (JUnit) which you can compile & run.
